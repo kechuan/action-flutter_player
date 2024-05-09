@@ -1,0 +1,4 @@
+enum VideoResource{
+  local,
+  online
+}

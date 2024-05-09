@@ -1,0 +1,139 @@
+{
+	"files": [
+		{
+			"path": "lib/Lab/internal/url_request.dart",
+			"bookmarks": [
+				{
+					"line": 16,
+					"column": 4,
+					"label": "Request Header"
+				},
+				{
+					"line": 37,
+					"column": 23,
+					"label": "requestAPI"
+				}
+			]
+		},
+		{
+			"path": "lib/Lab/widget/videoGestureDecetor.dart",
+			"bookmarks": [
+				{
+					"line": 115,
+					"column": 62,
+					"label": "视频手势检测"
+				}
+			]
+		},
+		{
+			"path": "lib/Lab/model/video_model.dart",
+			"bookmarks": [
+				{
+					"line": 64,
+					"column": 0,
+					"label": "Model——Video"
+				},
+				{
+					"line": 416,
+					"column": 39,
+					"label": "播放结束回调"
+				}
+			]
+		},
+		{
+			"path": "lib/Lab/widget/component/player_completed_panel.dart",
+			"bookmarks": [
+				{
+					"line": 46,
+					"column": 27,
+					"label": "播放完毕的页面展示"
+				}
+			]
+		},
+		{
+			"path": "lib/Lab/widget/component/related_listitem.dart",
+			"bookmarks": [
+				{
+					"line": 14,
+					"column": 20,
+					"label": "相关视频推荐Item"
+				}
+			]
+		},
+		{
+			"path": "lib/Lab/widget/settingPanel.dart",
+			"bookmarks": [
+				{
+					"line": 215,
+					"column": 0,
+					"label": "设置面板"
+				}
+			]
+		},
+		{
+			"path": "lib/Lab/widget/controlPanel.dart",
+			"bookmarks": [
+				{
+					"line": 17,
+					"column": 0,
+					"label": "视频控制面板"
+				},
+				{
+					"line": 93,
+					"column": 17,
+					"label": "视频控制面板——下载"
+				}
+			]
+		},
+		{
+			"path": "lib/Lab/widget/localVideoListview.dart",
+			"bookmarks": [
+				{
+					"line": 220,
+					"column": 34,
+					"label": "onTap——本地视频载入"
+				}
+			]
+		},
+		{
+			"path": "lib/Lab/widget/onlineVideoListview.dart",
+			"bookmarks": [
+				{
+					"line": 199,
+					"column": 24,
+					"label": "onTap——在线视频载入"
+				}
+			]
+		},
+		{
+			"path": "lib/Lab/widget/component/video_qualitiy_label.dart",
+			"bookmarks": [
+				{
+					"line": 71,
+					"column": 40,
+					"label": "清晰度Label"
+				}
+			]
+		},
+		{
+			"path": "lib/Lab/model/user_model.dart",
+			"bookmarks": [
+				{
+					"line": 49,
+					"column": 0,
+					"label": "Model——Setting"
+				}
+			]
+		},
+		{
+			"path": "lib/Lab/model/playerUi_model.dart",
+			"bookmarks": [
+				{
+					"line": 66,
+					"column": 0,
+					"label": "Model——UI"
+				}
+			]
+		}
+	]
+}

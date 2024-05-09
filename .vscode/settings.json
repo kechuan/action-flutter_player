@@ -1,0 +1,7 @@
+{
+	"java.compile.nullAnalysis.mode": "automatic",
+	"commentTranslate.source": "Bing",
+	"commentTranslate.targetLanguage": "zh-CN",
+	"commentTranslate.hover.enabled": true,
+	"commentTranslate.multiLineMerge": false
+}
