@@ -1,7 +1,7 @@
 {
 	"files": [
 		{
-			"path": "lib/Lab/internal/url_request.dart",
+			"path": "lib/internal/url_request.dart",
 			"bookmarks": [
 				{
 					"line": 16,
@@ -16,7 +16,7 @@
 			]
 		},
 		{
-			"path": "lib/Lab/widget/videoGestureDecetor.dart",
+			"path": "lib/widget/videoGestureDecetor.dart",
 			"bookmarks": [
 				{
 					"line": 115,
@@ -26,7 +26,7 @@
 			]
 		},
 		{
-			"path": "lib/Lab/model/video_model.dart",
+			"path": "lib/model/video_model.dart",
 			"bookmarks": [
 				{
 					"line": 64,
@@ -41,7 +41,7 @@
 			]
 		},
 		{
-			"path": "lib/Lab/widget/component/player_completed_panel.dart",
+			"path": "lib/widget/component/player_completed_panel.dart",
 			"bookmarks": [
 				{
 					"line": 46,
@@ -51,7 +51,7 @@
 			]
 		},
 		{
-			"path": "lib/Lab/widget/component/related_listitem.dart",
+			"path": "lib/widget/component/related_listitem.dart",
 			"bookmarks": [
 				{
 					"line": 14,
@@ -61,7 +61,7 @@
 			]
 		},
 		{
-			"path": "lib/Lab/widget/settingPanel.dart",
+			"path": "lib/widget/settingPanel.dart",
 			"bookmarks": [
 				{
 					"line": 215,
@@ -71,7 +71,7 @@
 			]
 		},
 		{
-			"path": "lib/Lab/widget/controlPanel.dart",
+			"path": "lib/widget/controlPanel.dart",
 			"bookmarks": [
 				{
 					"line": 17,
@@ -86,17 +86,17 @@
 			]
 		},
 		{
-			"path": "lib/Lab/widget/localVideoListview.dart",
+			"path": "lib/widget/localVideoListview.dart",
 			"bookmarks": [
 				{
-					"line": 220,
+					"line": 219,
 					"column": 34,
 					"label": "onTap——本地视频载入"
 				}
 			]
 		},
 		{
-			"path": "lib/Lab/widget/onlineVideoListview.dart",
+			"path": "lib/widget/onlineVideoListview.dart",
 			"bookmarks": [
 				{
 					"line": 199,
@@ -106,7 +106,7 @@
 			]
 		},
 		{
-			"path": "lib/Lab/widget/component/video_qualitiy_label.dart",
+			"path": "lib/widget/component/video_qualitiy_label.dart",
 			"bookmarks": [
 				{
 					"line": 71,
@@ -116,7 +116,7 @@
 			]
 		},
 		{
-			"path": "lib/Lab/model/user_model.dart",
+			"path": "lib/model/user_model.dart",
 			"bookmarks": [
 				{
 					"line": 49,
@@ -126,7 +126,7 @@
 			]
 		},
 		{
-			"path": "lib/Lab/model/playerUi_model.dart",
+			"path": "lib/model/playerUi_model.dart",
 			"bookmarks": [
 				{
 					"line": 66,

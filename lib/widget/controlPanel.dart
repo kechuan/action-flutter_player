@@ -128,8 +128,8 @@ class VideoControlPanel extends StatelessWidget {
                         if(value!=null){
                           videoDownload(
                             value.keys.first, //name
-                            playerController.currentPlayingInformation["size"][value.values.first.value], //size
                             playerController.currentPlayingInformation["videoUrl"],
+                            playerController.currentPlayingInformation["size"][value.values.first.value], //size
                             playerController.currentPlayingInformation["audioUrl"],
                           );
                         }

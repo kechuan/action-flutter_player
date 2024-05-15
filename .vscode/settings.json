@@ -3,5 +3,6 @@
 	"commentTranslate.source": "Bing",
 	"commentTranslate.targetLanguage": "zh-CN",
 	"commentTranslate.hover.enabled": true,
-	"commentTranslate.multiLineMerge": false
+	"commentTranslate.multiLineMerge": false,
+	"java.configuration.updateBuildConfiguration": "disabled"
 }

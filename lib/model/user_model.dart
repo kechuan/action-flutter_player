@@ -6,7 +6,7 @@ import 'package:flutter_player/internal/hive.dart';
 import 'package:flutter_player/internal/url_request.dart';
 import 'package:get/get.dart';
 
-import 'package:media_kit/media_kit.dart';
+//import 'package:media_kit/media_kit.dart';
 
 enum VideoQuality{
   Local,
@@ -56,7 +56,7 @@ class UserModel{
 
   static RxMap<String,dynamic> configList = {
     "cookie":"",
-    "qualifiySetting":"",
+    "qualifiySetting":VideoQuality.FHD.name,
     "encodeSetting":"HEVC",
     "playMode":{'local':'none','online':'none'},
     'iconShow':["download","list"], 
@@ -80,33 +80,47 @@ class UserModel{
   //playList 需求 Media格式 可是Hive能提供的是 String 那么。。 转换 或者是 什么
   //还有个问题 既然你都要写播放列表 那最好直接记录
   // {[AnimateTitle]:[Duration]} 既然记录顺序 也能记录 Duration 直接一举两得 
-  static Playlist localPlayList = const Playlist([]);
+  //static Playlist localPlayList = const Playlist([]);
 
-  static Future init() async {
+  static void init() {
 
-    List<String> requiredConfig = ['cookie','qualifiySetting','encodeSetting'];
+    const List<String> requiredConfig = ['cookie','qualifiySetting','encodeSetting'];
 
-    Map<String,dynamic> defaultValue = {
-      'cookie':ClientCookies.sessData,
+    final Map<String,dynamic> defaultValue = {
+      'cookie':"",
       'qualifiySetting':VideoQuality.FHD.name,
       'encodeSetting':'HEVC',
       'playMode':{'Local':'none','online':'none'},
       'playList':{},
     };
 
-    for(final currentConfigName in requiredConfig){
+    for(int configIndex = 0;configIndex<requiredConfig.length;configIndex++){
 
-      await UserHive.getUserConfig(currentConfigName).then((configValue){
-        //print("$currentConfigName:$configValue");
-        if(configValue == null){
-          print("$currentConfigName set value");
-          UserHive.setUserConfig(currentConfigName,defaultValue[currentConfigName]);
+      print("${configIndex}/${requiredConfig.length-1}:${requiredConfig[configIndex]}");
+
+      UserHive.getUserConfig(requiredConfig[configIndex]).then((configValue){
+
+        if(configValue != null && configValue.isNotEmpty){
+          print("cookies content:$configValue");
+          if(requiredConfig[configIndex] == 'cookie'){
+            configList.update('cookie', (value) => configValue);
+
+            //风险性 但是便利
+            ClientCookies.sessData = configValue;
+            print("cookies exists.");
+          }
         }
+
+        else{
+          print("${requiredConfig[configIndex]} set value");
+          UserHive.setUserConfig(requiredConfig[configIndex],defaultValue[requiredConfig[configIndex]]);
+        }
+
       });
-      
     }
 
     print("user config inited");
+    return;
 
   }
 
@@ -146,6 +160,14 @@ class UserModel{
             
             cookiesState = "已生效";
             print("cookie状态已更新");
+
+              ClientCookies.sessData = sessdata;
+              HttpApiClient.broswerHeader.update("cookie", (value) => "SESSDATA=$sessdata");
+
+              HttpApiClient.clientOption.headers = HttpApiClient.broswerHeader;
+              HttpApiClient.client.options = HttpApiClient.clientOption;
+
+              isLogined = true;
             
             break;
           }

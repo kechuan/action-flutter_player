@@ -357,14 +357,17 @@ class PlayerUIModel extends GetxController{
   void hidePanelTimer(){
     print("trigged panel");
 
-    //if(delayHidePanelTimer != null){
-    //    if(delayHidePanelTimer!.isActive) delayHidePanelTimer?.cancel();
-    //}
+    if(!panelActiveStatus) return;
 
-    //delayHidePanelTimer = Timer(const Duration(seconds: 6),(){ //原本为6s debug测试直接屏蔽这段
-    //  panelActiveStatus.value = false;
-    //  print("Panel was hidden by Timer");
-    //});
+    if(delayHidePanelTimer != null){
+        if(delayHidePanelTimer!.isActive) delayHidePanelTimer?.cancel();
+    }
+
+    delayHidePanelTimer = Timer(const Duration(seconds: 5),(){ //原本为5s debug测试直接屏蔽这段
+      panelActiveStatus = false;
+      toggleControlPanelStatus();
+      print("Panel was hidden by Timer");
+    });
     
   }
 

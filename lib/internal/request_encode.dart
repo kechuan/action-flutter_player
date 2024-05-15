@@ -224,7 +224,8 @@ void searchRequestResponse(String searchContent){
     }
 
     case 'HLS':{
-      searchRequestResponse(searchContent);
+      //backupliveRoomResponse(searchContent,4);
+      liveRoomResponse(searchContent);
     }
 
   }
@@ -341,10 +342,10 @@ final playerControlPanel = Get.find<PlayerUIModel>();
 
 }
 
-void liveRoomResponse(String orignalRequest,int? qn) async {
+void backupliveRoomResponse(String orignalRequest,[int? qn]) async {
 
   final playerController = Get.find<VideoModel>();
-final playerControlPanel = Get.find<PlayerUIModel>();
+  final playerControlPanel = Get.find<PlayerUIModel>();
 
   List<dynamic> accept_qualityList = [];
 
@@ -356,15 +357,12 @@ final playerControlPanel = Get.find<PlayerUIModel>();
           RequestParams.cid: orignalRequest,
           RequestParams.qn: qn ?? 4,
           
-
           //avc的编码基本最全 所有画质挡位都有 其余画质挡位可能会有残缺
         },
       ).then(
         (response){
 
           if(response.data["code"] == 0){
-
-            //print("response:${response.data["data"]["durl"][0]["url"]}");
 
             accept_qualityList = response.data["data"]["quality_description"];
 
@@ -397,6 +395,7 @@ final playerControlPanel = Get.find<PlayerUIModel>();
         }
       );
 
+    //这个是画质挡位 因为0已经添加 所以这里从1开始
     for(int currentQualify = 1; currentQualify < accept_qualityList.length; currentQualify++){
 
         HttpApiClient.client.get(
@@ -417,7 +416,7 @@ final playerControlPanel = Get.find<PlayerUIModel>();
 
 }
 
-void testLiveRoomResponse(String orignalRequest) async {
+void liveRoomResponse(String orignalRequest,[int? qn]) async {
 
   Map<int,String> qn_Map = {
     30000: "杜比",
@@ -436,14 +435,17 @@ void testLiveRoomResponse(String orignalRequest) async {
 
   List<dynamic> accept_qualityList = [];
 
+  bool isAccessSucc = false;
+
   await HttpApiClient.client.get(
         VideoCatalog.liveRoom,
         queryParameters:{
+          RequestParams.cid: orignalRequest,
+          RequestParams.qn: qn ?? 10000,
           "room_id": orignalRequest,
           "protocol":1, // [http_stream,http_hls]
           "format":2, //[flv,ts,fmp4]
           "codec":1, //[avc,hevc,av1]
-          "qn":10000,
 
           //avc的编码基本最全 所有画质挡位都有 其余画质挡位可能会有残缺
         },
@@ -457,25 +459,33 @@ void testLiveRoomResponse(String orignalRequest) async {
             videoQualityInforamtion.clear();
             playerControlPanel.currentPlayingVideoType.value = VideoType.onlineStream.index;
 
-            Map playUrl = response.data["data"]["playurl_info"]["playurl"];
-            Map codec_stream = playUrl["stream"][0]["format"][0]["codec"][0];
+            if(response.data["data"]["playurl_info"]["playurl"]!=null){
 
-            accept_qualityList = codec_stream["accept_qn"];
+              isAccessSucc = true;
 
-            print("3 Part: host > ${codec_stream['url_info'][0]['host']} api > ${codec_stream["base_url"]} params > ${codec_stream["url_info"][0]["extra"]}");
+              Map playUrl = response.data["data"]["playurl_info"]["playurl"];
+              Map codec_stream = playUrl["stream"][0]["format"][0]["codec"][0];
 
-            playerController.playerVideoLoad(
-              Media(
-                "${codec_stream['url_info'][0]['host']}${codec_stream["base_url"]}${codec_stream["url_info"][0]["extra"]}",
-                extras:{
-                  'refer':"www.bilibili.com"
-                }
-              )
-            );
+              accept_qualityList = codec_stream["accept_qn"];
 
-            videoQualityInforamtion.addAll({
-              "原画": "${codec_stream['url_info'][0]['host']}${codec_stream["base_url"]}${codec_stream["url_info"][0]["extra"]}"
-            });
+              print("3 Part: host > ${codec_stream['url_info'][0]['host']} api > ${codec_stream["base_url"]} params > ${codec_stream["url_info"][0]["extra"]}");
+
+              playerController.playerVideoLoad(
+                Media(
+                  "${codec_stream['url_info'][0]['host']}${codec_stream["base_url"]}${codec_stream["url_info"][0]["extra"]}",
+                  extras:{
+                    'refer':"www.bilibili.com"
+                  }
+                )
+              );
+
+              videoQualityInforamtion.addAll({
+                "原画": "${codec_stream['url_info'][0]['host']}${codec_stream["base_url"]}${codec_stream["url_info"][0]["extra"]}"
+              });
+
+            }
+
+            
             
           }
 
@@ -486,6 +496,70 @@ void testLiveRoomResponse(String orignalRequest) async {
 
         }
       );
+
+    if(!isAccessSucc){
+
+      print("not contain HEVC source.change to AVC source");
+
+      await HttpApiClient.client.get(
+        VideoCatalog.liveRoom,
+        queryParameters:{
+          RequestParams.cid: orignalRequest,
+          RequestParams.qn: qn ?? 10000,
+          "room_id": orignalRequest,
+          "protocol":1, // [http_stream,http_hls]
+          "format":2, //[flv,ts,fmp4]
+          "codec":0, //[avc,hevc,av1]
+        },
+      ).then(
+        (response){
+
+          print("response:${response}:");
+
+          if(response.data["code"] == 0){
+
+            videoQualityInforamtion.clear();
+            playerControlPanel.currentPlayingVideoType.value = VideoType.onlineStream.index;
+
+            if(response.data["data"]["playurl_info"]["playurl"]!=null){
+
+              isAccessSucc = true;
+
+              Map playUrl = response.data["data"]["playurl_info"]["playurl"];
+              Map codec_stream = playUrl["stream"][0]["format"][0]["codec"][0];
+
+              accept_qualityList = codec_stream["accept_qn"];
+
+              print("3 Part: host > ${codec_stream['url_info'][0]['host']} api > ${codec_stream["base_url"]} params > ${codec_stream["url_info"][0]["extra"]}");
+
+              playerController.playerVideoLoad(
+                Media(
+                  "${codec_stream['url_info'][0]['host']}${codec_stream["base_url"]}${codec_stream["url_info"][0]["extra"]}",
+                  extras:{
+                    'refer':"www.bilibili.com"
+                  }
+                )
+              );
+
+              videoQualityInforamtion.addAll({
+                "原画": "${codec_stream['url_info'][0]['host']}${codec_stream["base_url"]}${codec_stream["url_info"][0]["extra"]}"
+              });
+
+            }
+            
+          }
+
+          else{
+            print("cid:$orignalRequest,not found!");
+          }
+
+        }
+      );
+
+
+    }
+
+
 
     for(int currentQualify = 1; currentQualify < accept_qualityList.length; currentQualify++){
 

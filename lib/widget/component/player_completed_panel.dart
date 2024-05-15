@@ -40,8 +40,9 @@ class PlayerCompletedPanel extends StatelessWidget {
           
           children: [
                               
-            Obx((){
-              return Row( //attention constraint!
+
+            //attention constraint!
+            Row( 
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
@@ -93,11 +94,10 @@ class PlayerCompletedPanel extends StatelessWidget {
                         
                       ],
                     ),
-                  )
-                              
+                  )                 
                 ],
-              );
-            }),
+            ),
+
                               
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 12),

@@ -5,7 +5,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_player/model/playerUI_model.dart';
-import 'package:flutter_player/model/user_model.dart';
+//import 'package:flutter_player/model/user_model.dart';
 import 'package:flutter_player/model/video_model.dart'; 
 
 import 'package:flutter_player/widget/component/player_completed_panel.dart';
@@ -15,8 +15,6 @@ import 'package:flutter_player/widget/videoGestureDecetor.dart';
 
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-
-  
 
 class VideoPage extends StatelessWidget {
   
@@ -30,13 +28,11 @@ class VideoPage extends StatelessWidget {
     final VideoModel playerData = Get.find<VideoModel>();
     final PlayerUIModel playerControlPanel = Get.find<PlayerUIModel>();
 
-    
-
     print("videoPage -> VideoModel hashCode:${playerData.hashCode}");
 
     //UserModel.init();
     //playerData.initPlayer(); //否则只重写player
-    //playerData.playerCompletedStatusListen();
+    playerData.playerCompletedStatusListen();
 
     playerControlPanel.videoPageContext = context;
 

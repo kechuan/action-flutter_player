@@ -136,7 +136,7 @@ class OnlineVideoListview extends StatelessWidget {
             
                                 print("searchContent:${searchFieldController.value.text}");
 
-                                //testLiveRoomResponse(searchFieldController.value.text);
+                                //liveRoomResponse(searchFieldController.value.text);
                                 searchRequestResponse(searchFieldController.value.text);
             
                               },
@@ -165,6 +165,8 @@ class OnlineVideoListview extends StatelessWidget {
             id: "onlineList",
             init: playerControlPanel,
             builder: (controller) {
+              print("playerController.onlinePlayList.length:${playerController.onlinePlayList.length}");
+              
               return Expanded(
                 child: 
                   ListView.builder(
@@ -173,7 +175,7 @@ class OnlineVideoListview extends StatelessWidget {
                     itemCount: max(1,playerController.onlinePlayList.length),
                     itemBuilder: (_,index){
                 
-                      print("playerController.onlinePlayList.length:${playerController.onlinePlayList.length}");
+                      
                   
                       if(playerController.onlinePlayList.isEmpty){
                         return const Center(

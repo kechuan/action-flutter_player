@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_player/model/user_model.dart';
 import 'package:get/get.dart';
 
 class FutureWaitingPage extends StatelessWidget {
@@ -8,14 +9,13 @@ class FutureWaitingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return FutureBuilder(
-      future: 
-      Future.delayed(const Duration(seconds: 3)).then(
-        (_){
-          print("hot reload: ${Get.currentRoute}");
-          Future.delayed(const Duration(seconds: 1)).then((_) => Get.offNamed('video')); //由 二层Future 执行路由返回
-        } 
-      ), //一层Future执行完会回应done状态
-      
+      future: Future(() async {
+        UserModel.init();
+        await Future.delayed(const Duration(seconds: 2));
+      }).then((value){
+        Future.delayed(const Duration(seconds: 1)).then((_) => Get.offNamed('video')); //由 二层Future 执行路由返回
+      }),
+     
       builder: (_,snapshot){
 
         switch(snapshot.connectionState){
@@ -29,7 +29,7 @@ class FutureWaitingPage extends StatelessWidget {
                   spacing: 12,
                   children: [
                     CircularProgressIndicator(),
-                    Text("waiting the response...")
+                    Text("init Model...")
                   ],
                 )
               ),

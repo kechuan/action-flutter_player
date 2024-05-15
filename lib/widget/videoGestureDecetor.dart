@@ -157,8 +157,7 @@ class VideoGestureDector extends StatelessWidget {
             }
 
             playerControlPanel.toggleControlPanelStatus();
-
-            //playerData.hidePanelTimer();
+            playerControlPanel.hidePanelTimer();
 
             print("panelStatus: status:${playerControlPanel.panelActiveStatus}, animated:${playerControlPanel.panelActiveAnimated}");
 

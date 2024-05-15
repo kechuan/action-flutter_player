@@ -1,6 +1,7 @@
 
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_player/model/user_model.dart';
 import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
 
@@ -15,7 +16,7 @@ class DownloadQualifySelectPanel extends StatelessWidget {
 
     final playerData = Get.find<VideoModel>();
 
-    final RxInt selectedQualifyItem = 1.obs;
+    final RxInt selectedQualifyItem = 0.obs;
     //final RxList selectedVideoItem = [].obs;
 
     final RxMap selectedVideoItems = {}.obs;
@@ -36,7 +37,7 @@ class DownloadQualifySelectPanel extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                const Text("画质选择",style: TextStyle(fontSize: 16,fontWeight:FontWeight.bold)),
+                Text("画质选择 ${UserModel.isLogined?"":"(游客模式)"}",style: const TextStyle(fontSize: 16,fontWeight:FontWeight.bold)),
             
                 Expanded(
                   child: SizedBox(
@@ -182,7 +183,17 @@ class DownloadQualifySelectPanel extends StatelessWidget {
                 
                     Obx(
                       (){
-                        double? videoSize = playerData.currentPlayingInformation["size"][selectedQualifyItem.value];
+
+                        double? videoSize;
+
+                        if((playerData.currentPlayingInformation["size"] as List).isNotEmpty){
+                          videoSize = playerData.currentPlayingInformation["size"][selectedQualifyItem.value];
+                        }
+
+                        else{
+                           videoSize = null;
+                        }
+                        
                         return ElevatedButton(
                           onPressed: (){
 

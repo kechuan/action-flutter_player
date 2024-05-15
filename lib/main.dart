@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_player/catalog/middleWare/videoPageMiddleware.dart';
+//import 'package:flutter_player/catalog/middleWare/videoPageMiddleware.dart';
 import 'package:flutter_player/catalog/videoPage.dart';
 
 import 'package:flutter_player/internal/hive.dart';

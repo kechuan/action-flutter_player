@@ -24,8 +24,10 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.flutter_player"
-    compileSdk flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+
+    compileSdk 34
+    ndkVersion "25.1.8937393"
+//    ndkVersion flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -42,11 +44,11 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.flutter_player"
+        applicationId "kechuan.io.flutter_player"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion 26
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -58,10 +60,27 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions = ["flavor-type"]
+
+    productFlavors{
+        development{
+            dimension "flavor-type"
+        }
+        staging{
+            dimension "flavor-type"
+        }
+        production{
+            dimension "flavor-type"
+        }
+    }
+
 }
 
 flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}

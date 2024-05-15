@@ -18,7 +18,6 @@ import 'package:flutter_player/model/playerUI_model.dart';
 import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
 
-
 final videoFliter = RegExp(r'mkv|mp4|flv|webv|m2ts|rmvb$');
 
 class LocalVideoListView extends StatelessWidget {
@@ -629,11 +628,10 @@ class LocalVideoListView extends StatelessWidget {
 
                   }
 
-                    
-
                   //Append MODE
                   else{
-
+                    
+                    //Platfrom.xxx好像只会在运行时判定 而不是在编译时判定。。那咋办呢
                     if(Platform.isWindows){
 
                       final fileInformation = filePickDialog();
@@ -647,9 +645,10 @@ class LocalVideoListView extends StatelessWidget {
                         }
                       }
 
+                      playerControlPanel.updateLocalList();
+
                     }
 
-                    
                   }
 
                 }, 

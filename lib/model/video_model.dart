@@ -73,6 +73,8 @@ class VideoModel extends GetxController{
         )
       );
 
+      player.setVolume(videoVolume);
+
       playerController = VideoController(player);
 
       var pp = player.platform;
@@ -133,9 +135,10 @@ class VideoModel extends GetxController{
       CookieManager(ClientCookies.cookieJar)
     );
 
-    if(HttpApiClient.broswerHeader.containsKey("cookie")){
+
+    if(ClientCookies.sessData.isNotEmpty){
       UserModel.isLogined = true;
-      print("is Logged");
+      print("is Logined");
     }
 
     else{
@@ -254,12 +257,16 @@ class VideoModel extends GetxController{
     String? parsingAudioUrl;
 
 
-    if(UserModel.isLogined){ //Access With Member 
+    if(UserModel.isLogined){ 
+      //Access With Member 
+      print("Member Mode");
       parsingVideoUrl = encodeHTTPRequest(orignalUrl);
     
     }
 
-    else{  //Access With Guest
+    else{  
+      //Access With Guest
+      print("Guest Mode");
       parsingVideoUrl = orignalUrl;
     }
 
@@ -301,7 +308,7 @@ class VideoModel extends GetxController{
         Map<String,String> videoQualityInforamtion = currentPlayingInformation['qualityMap'];
         List<dynamic> sizeInformation = currentPlayingInformation["size"];
 
-        if(dashFlag){
+        if(dashFlag && UserModel.isLogined){
 
           List<dynamic> accept_description = responseInformation['accept_description'];
           List<dynamic> accept_quality = responseInformation['accept_quality'];
@@ -409,6 +416,7 @@ class VideoModel extends GetxController{
         else{
           parsingVideoUrl = response.data["data"]["durl"][0]["url"];
           currentPlayingInformation["videoUrl"] = parsingVideoUrl;
+          sizeInformation.add(response.data["data"]["durl"][0]["size"]/1024/1024); //durl请求的视频size的大小是 Byte为单位
         }
 
         onlineMediaInformation = Media(
@@ -508,7 +516,7 @@ class VideoModel extends GetxController{
 
   }
 
-  Future playerCompletedStatusListen() async {
+  void playerCompletedStatusListen(){
     player.stream.completed.listen((completedStatus) {
 
       print("status: initModel ${playerinitalFlag.value}, ${player.state.position.inMilliseconds}/${player.state.duration.inMilliseconds}");
