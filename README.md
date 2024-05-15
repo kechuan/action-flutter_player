@@ -1,16 +1,18 @@
 # flutter_player
 
-A new Flutter project.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+透过media_kit组件来构建的播放器
 
-A few resources to get you started if this is your first Flutter project:
+![image-20240515100944645](D:\dart\flutter\Project\flutter_player\images\image-20240515100944645.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+能播放本地视频 ，也能载入在线视频
+
+![image-20240515101622874](D:\dart\flutter\Project\flutter_player\images\image-20240515101622874.png)
+
+
+
+![image-20240515101507615](D:\dart\flutter\Project\flutter_player\images\image-20240515101507615.png)
+
