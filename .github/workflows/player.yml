@@ -1,6 +1,9 @@
 name: player-build-action
 #推送Tag时触发
-on: push
+on: 
+  push:
+    tags:
+      - 'v*.*.*'
 jobs:
   # Windows 镜像
   build-windows:
@@ -30,12 +33,13 @@ jobs:
 
       # 3.4 build Windows ZIP\MSIX
       - name: Build Windows
-        run: flutter_distributor package --platform windows --targets msix,zip --skip-clean
+        run: flutter_distributor package --platform windows --targets zip --skip-clean
 
-      # 3.5 上传ZIP\MSIX
+      # 3.5 上传ZIP
       - name: Upload Release
         uses: softprops/action-gh-release@v2 #用于直接传入到github release?
         with:
+          tag_name: ${{ github.ref }}
           body_path: document/RELEASE.txt
           files: build/dist/*/*.zip
         env: 
