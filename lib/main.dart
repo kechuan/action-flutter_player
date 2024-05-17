@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 //import 'package:flutter_player/catalog/middleWare/videoPageMiddleware.dart';
 import 'package:flutter_player/catalog/videoPage.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_player/model/video_model.dart';
 
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:window_manager/window_manager.dart';
 
 import './catalog/initLoadingPage.dart';
@@ -21,7 +23,6 @@ void main() async{
 	
 	WidgetsFlutterBinding.ensureInitialized();
 	// Must add this line.
-	
   MediaKit.ensureInitialized();
 
   if(Platform.isWindows){
@@ -29,25 +30,57 @@ void main() async{
     await windowManager.ensureInitialized();
 
     WindowOptions windowOptions = const WindowOptions(
-      size: Size(1200, 600),
+      size: Size(1200, 650),
       minimumSize: Size(900, 650),
-      //center: true,
-      //backgroundColor: Colors.transparent,
       skipTaskbar: false,
-      //titleBarStyle: TitleBarStyle.hidden,
       windowButtonVisibility: true,
 
     );
+
     windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
       await windowManager.focus();
     });
 
+    await MyHive.init();
+
+    runApp(const MyApp());
+
   }
 
-  await MyHive.init();
+  else{
 
-  runApp(const MyApp());
+    var storagePermission = await Permission.manageExternalStorage.request();
+
+    if(storagePermission.isGranted){
+      print("external permission given.");
+      await MyHive.init();
+
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarBrightness: Brightness.light,
+        )
+      );
+
+      SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft]
+      ).then((value) => {
+        print("apply Android landscape."),
+        
+        runApp(const MyApp())
+      });
+    }
+
+    else{
+      Get.snackbar("", "请授予存储权限用于保存下载目录");
+      Permission.manageExternalStorage.request();
+
+
+    }
+
+  }
+
 }
 
 class MyApp extends StatelessWidget {
@@ -55,6 +88,8 @@ class MyApp extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
+    //print("your device size/ratio:${MediaQuery.sizeOf(context)},${MediaQuery.of(context).devicePixelRatio}");
+    //Get.snackbar("size:","${MediaQuery.sizeOf(context)}");
     return GetMaterialApp(
         theme: ThemeData(
           scrollbarTheme: const ScrollbarThemeData(

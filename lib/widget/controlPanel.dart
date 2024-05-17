@@ -113,7 +113,7 @@ class VideoControlPanel extends StatelessWidget {
                             ),
                             height: 400,
                             width: 400,
-                            
+
                             child: const DownloadQualifySelectPanel(),
                           ),
                         ),
@@ -270,7 +270,7 @@ class VideoControlPanel extends StatelessWidget {
                   iconButtonTheme:  IconButtonThemeData(
                   style: ButtonStyle(
                     iconColor: const MaterialStatePropertyAll(Colors.white),
-                    iconSize: MaterialStatePropertyAll(max(24, min(36,MediaQuery.of(context).size.width/46)))),
+                    iconSize: MaterialStatePropertyAll(max(24, min(36,MediaQuery.sizeOf(context).width/46)))),
                   ),
                 ),
                 child: Padding(

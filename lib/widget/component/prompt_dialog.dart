@@ -17,8 +17,6 @@ class DownloadQualifySelectPanel extends StatelessWidget {
     final playerData = Get.find<VideoModel>();
 
     final RxInt selectedQualifyItem = 0.obs;
-    //final RxList selectedVideoItem = [].obs;
-
     final RxMap selectedVideoItems = {}.obs;
     // {name:QualifyIndex}
 
@@ -100,7 +98,9 @@ class DownloadQualifySelectPanel extends StatelessWidget {
           ),
 
           SizedBox(
-            height: 180,
+            //height: 180,
+            //2.75
+            height: MediaQuery.sizeOf(context).height < 400 ? 180/MediaQuery.of(context).devicePixelRatio : 180,
             child: ListView.builder(
               itemCount: 1,
               itemExtent: 60,
@@ -126,7 +126,7 @@ class DownloadQualifySelectPanel extends StatelessWidget {
                           title: Text(videoTitle??"",maxLines: 1,overflow: TextOverflow.ellipsis),
                           trailing: Text("${videoSize?.toStringAsFixed(2)}MB",style: const TextStyle(fontSize: 13,color: Colors.black),),
                           onTap: (){
-                            //print("start to download");
+                            //print(MediaQuery.sizeOf(context));
 
                             if(playerData.currentPlayingInformation["size"][selectedQualifyItem.value]!=null){
 

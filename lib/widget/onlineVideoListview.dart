@@ -50,13 +50,14 @@ class OnlineVideoListview extends StatelessWidget {
             
                         child: Obx((){
                                               
-                          List<String> nameList = ["搜索","AV/BV/cid","HLS"];
-                          List<String> valueList = ["搜索","视频号","HLS"];
+                          List<String> nameList = ["搜索","AV/BV","HLS","URL"];
+                          List<String> valueList = ["搜索","视频号","HLS","URL"];
                                               
                           List<Icon> iconList = const [
                             Icon(Icons.search),
                             Icon(Icons.numbers),
-                            Icon(Icons.tap_and_play)
+                            Icon(Icons.tap_and_play),
+                            Icon(Icons.link)
                           ];
                                                                  
                           return PopupMenuButton<String>(
@@ -174,9 +175,7 @@ class OnlineVideoListview extends StatelessWidget {
                     shrinkWrap:true,
                     itemCount: max(1,playerController.onlinePlayList.length),
                     itemBuilder: (_,index){
-                
-                      
-                  
+
                       if(playerController.onlinePlayList.isEmpty){
                         return const Center(
                           child: Column(

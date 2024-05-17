@@ -224,8 +224,16 @@ void searchRequestResponse(String searchContent){
     }
 
     case 'HLS':{
-      //backupliveRoomResponse(searchContent,4);
       liveRoomResponse(searchContent);
+    }
+
+    //算作是Local播放
+    case 'URL':{
+      playerControlPanel.currentPlayingVideoType.value = VideoType.localVideo.index;
+      playerController.loadLocalVideo({"uri":searchContent});
+
+      //但是不为其保留seek 就当是临时视频
+      
     }
 
   }

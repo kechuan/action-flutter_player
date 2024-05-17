@@ -1,25 +1,10 @@
 {
 	"files": [
 		{
-			"path": "lib/internal/url_request.dart",
-			"bookmarks": [
-				{
-					"line": 16,
-					"column": 4,
-					"label": "Request Header"
-				},
-				{
-					"line": 37,
-					"column": 23,
-					"label": "requestAPI"
-				}
-			]
-		},
-		{
 			"path": "lib/widget/videoGestureDecetor.dart",
 			"bookmarks": [
 				{
-					"line": 115,
+					"line": 116,
 					"column": 62,
 					"label": "视频手势检测"
 				}
@@ -89,7 +74,7 @@
 			"path": "lib/widget/localVideoListview.dart",
 			"bookmarks": [
 				{
-					"line": 219,
+					"line": 220,
 					"column": 34,
 					"label": "onTap——本地视频载入"
 				}
@@ -99,7 +84,7 @@
 			"path": "lib/widget/onlineVideoListview.dart",
 			"bookmarks": [
 				{
-					"line": 199,
+					"line": 198,
 					"column": 24,
 					"label": "onTap——在线视频载入"
 				}

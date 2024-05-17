@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
 class StoragePath{
-  static const String downloadPath = r'.\downloads';
+  static String downloadPath = r'.\downloads';
 }
 
 class HttpApiClient{
@@ -21,7 +21,7 @@ class HttpApiClient{
 class ClientCookies{
   static final cookieJar = PersistCookieJar(
     storage: FileStorage(
-      './downloads/cookies'
+      '${StoragePath.downloadPath}/cookies'
     )
   );
 
@@ -101,12 +101,3 @@ class RequestParams{
 class RequestRegExp{
   static RegExp videoIDExp = RegExp(r'^(av|bv|AV|BV)');
 }
-
-
-
-
-
-
-
-
-

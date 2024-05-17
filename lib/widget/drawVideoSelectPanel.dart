@@ -28,15 +28,12 @@ class DrawVideoSelectPanel extends StatelessWidget {
     final playerControlPanel = Get.find<PlayerUIModel>();
 
     final PageController videoResourceController = PageController(
-      //initialPage: playerController.recordVideoResourcePageIndex.value
       initialPage: playerControlPanel.recordVideoResourcePageIndex
     );    
     
     return UnVisibleResponse(
-
       child: Drawer(
-      //width: MediaQuery.of(context).size.width*17/48,
-      width: MediaQuery.of(context).size.width*1/3,
+      width: MediaQuery.sizeOf(context).width*1/3 < 400 ? 400 : MediaQuery.sizeOf(context).width*1/3,
       backgroundColor: const Color.fromARGB(231, 85, 83, 83),
       child: Scaffold(
       
@@ -62,8 +59,10 @@ class DrawVideoSelectPanel extends StatelessWidget {
                               
                               videoResourceController.animateToPage(index,duration: const Duration(milliseconds: 300),curve: Curves.easeIn);
                               currentIndexNotifier.value = index.toDouble();
-                              //playerController.recordVideoResourcePageIndex.value = index;
+                              
                               playerControlPanel.recordVideoResourcePageIndex = index;
+
+                              print("width:${(context.findRenderObject() as RenderBox).size.width}");
                               
                             }, 
                             //child: Text(nameList[index],style: const TextStyle(color: Color.fromARGB(255, 22, 27, 33),fontSize: 14))
@@ -131,10 +130,15 @@ class DrawVideoSelectPanel extends StatelessWidget {
                         duration: const Duration(milliseconds: 200),
                         
                         //原本的padding数值应该是all(12) 但好像有其他因素导致变成了10
-                        transform: Matrix4.translationValues(currentIndex*MediaQuery.of(context).size.width*2/13, 0.0, 0.0), // 移动效果 透过矩阵提供xyz坐标以实现
+                        transform: Matrix4.translationValues(
+                          currentIndex*(MediaQuery.sizeOf(context).width*1/3 < 400 ? 200 : MediaQuery.sizeOf(context).width*2/13),
+                          0.0,
+                          0.0
+                        ), // 移动效果 透过矩阵提供xyz坐标以实现
                         alignment: Alignment.centerLeft,
                         height: 2,
-                        width: MediaQuery.of(context).size.width*2/13,
+                        width: MediaQuery.sizeOf(context).width*1/3 < 400 ? 180 : MediaQuery.sizeOf(context).width*2/13,
+                        //width: MediaQuery.sizeOf(context).width > 300 ? MediaQuery.sizeOf(context).width*2/13 : 150,
                         color: Colors.grey,
                       
                       )
@@ -167,6 +171,8 @@ class DrawVideoSelectPanel extends StatelessWidget {
                   thumbVisibility: MaterialStateProperty.all(false)
                 )),
               child: EasyRefresh( //easyRefresh 兼顾刷新 与 滑动手势
+              callRefreshOverOffset:5,
+              //spring: const SpringDescription(mass: 5,stiffness: 300,damping: 0.25),
 
               controller: EasyRefreshController(),
               header: const MaterialHeader(),

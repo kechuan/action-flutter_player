@@ -99,7 +99,7 @@ class OnlineVideoListItem extends StatelessWidget {
                             children: [
                               ConstrainedBox(
                                 constraints: BoxConstraints(
-                                  maxWidth: min(400,MediaQuery.of(context).size.width/7),
+                                  maxWidth: min(400,MediaQuery.sizeOf(context).width/7),
                                   maxHeight: 80,
                                 ),
                                 child: Text(

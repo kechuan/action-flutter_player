@@ -27,8 +27,6 @@ class RelatedVideoListItem extends StatelessWidget {
           child: Stack(
             children: [
 
-              
-
               CachedNetworkImage(
                 imageUrl: relatedVideoInformation["pic"],
                 imageBuilder: (_,imageProvider){

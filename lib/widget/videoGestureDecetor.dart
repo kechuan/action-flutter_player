@@ -21,7 +21,8 @@ class VideoGestureDector extends StatelessWidget {
     final PlayerUIModel playerControlPanel = Get.find<PlayerUIModel>();
 
     int verticalStep = 3; //3滑动offset 计数1次
-    int horizionStep = MediaQuery.of(context).size.width~/40; //横向调整 步进应拉长
+    //int horizionStep = MediaQuery.sizeOf(context).width~/40; //横向调整 步进应拉长
+    int horizionStep = MediaQuery.sizeOf(context).width~/40; //横向调整 步进应拉长
 
     int initalDuration = 0;
     double offsetHeight = 0;
@@ -33,7 +34,7 @@ class VideoGestureDector extends StatelessWidget {
       },
 
       onLongPressEnd: (longPressDetail){
-        print("long press end test width:${MediaQuery.of(context).size.width} height:${MediaQuery.of(context).size.height}"); //预计用作视频加速 rate 调整
+        print("long press end test width:${MediaQuery.sizeOf(context).width} height:${MediaQuery.sizeOf(context).height}"); //预计用作视频加速 rate 调整
       },
 
       onVerticalDragStart: (dragStartDetails){
@@ -41,8 +42,8 @@ class VideoGestureDector extends StatelessWidget {
         playerControlPanel.dragStartPositonY = dragStartDetails.localPosition.dy;
         offsetHeight = dragStartDetails.localPosition.dy;
 
-        playerControlPanel.currentPageWidth = MediaQuery.of(context).size.width;
-        playerControlPanel.currentPageHeight = MediaQuery.of(context).size.height;
+        playerControlPanel.currentPageWidth = MediaQuery.sizeOf(context).width;
+        playerControlPanel.currentPageHeight = MediaQuery.sizeOf(context).height;
 
 
         print("start Pos(${playerControlPanel.dragStartPositonX},${playerControlPanel.dragStartPositonY})"); //(0,0 => 左上角)
@@ -110,7 +111,7 @@ class VideoGestureDector extends StatelessWidget {
 
       onVerticalDragUpdate: (dragVerticalUpdateDetails) async {
 
-        if(playerControlPanel.dragStartPositonX < MediaQuery.of(context).size.width / 3 && dragVerticalUpdateDetails.localPosition.dx < MediaQuery.of(context).size.width /3){
+        if(playerControlPanel.dragStartPositonX < MediaQuery.sizeOf(context).width / 3 && dragVerticalUpdateDetails.localPosition.dx < MediaQuery.sizeOf(context).width /3){
 
           if(dragVerticalUpdateDetails.localPosition.dy % (dragVerticalUpdateDetails.localPosition.dy/verticalStep) == 0){ // screenHeight / ? => 13 segments judge
 

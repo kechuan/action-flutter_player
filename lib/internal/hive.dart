@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_player/internal/url_request.dart';
 import 'package:flutter_player/model/duration_adapter.dart';
 import 'package:hive/hive.dart';
 
@@ -24,8 +25,17 @@ class MyHive {
   //static late final Box<VideoDurationRecord> videoRecordDataBase; //存储目标
 
   static Future<void> init() async {
+
+    if(Platform.isAndroid){
+      filesDir = Directory('storage/emulated/0/Download/flutter_player');
+      StoragePath.downloadPath = 'storage/emulated/0/Download/flutter_player/downloads';
+    }
+
+    else{
+      filesDir = Directory('.${Platform.pathSeparator}downloads');
+    }
     
-    filesDir = Directory('.${Platform.pathSeparator}downloads');
+    
 
     Hive.init('${filesDir.path}${Platform.pathSeparator}hivedb');
 

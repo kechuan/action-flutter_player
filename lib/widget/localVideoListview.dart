@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 
 import 'package:flutter_player/internal/convert_task_queue_information.dart';
 import 'package:flutter_player/internal/enum_define.dart';
@@ -649,7 +650,35 @@ class LocalVideoListView extends StatelessWidget {
 
                     }
 
-                  }
+                    else if(Platform.isAndroid){
+
+                      //filePicker 由于 安卓/IOS的限制 会变成 copyFile 要及时删除
+                      //删除时机么 自己手动删除播放列表时进行clear() 应该算是个合理的时机
+                      //如果这样操作的话 那么本地列表也得作为一个持久的保留数据才可以了
+                      FilePickerResult? result = await FilePicker.platform.pickFiles(
+                        type: FileType.video,
+                        allowMultiple: true
+                      );
+
+                      if(result!=null){
+
+                        print(result);
+                        List<File> files = result.paths.map((path) => File(path!)).toList();
+                        
+                          for(var currentFile in files){
+                            playerController.localPlayList.add({
+                              "title":currentFile.path.split(Platform.pathSeparator).last,
+                              "uri":currentFile.path
+                            });
+                          }
+                        }
+                      }
+                     
+                      playerControlPanel.updateLocalList();
+
+                    }
+
+                  
 
                 }, 
 

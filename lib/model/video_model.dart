@@ -510,7 +510,6 @@ class VideoModel extends GetxController{
       
       //重新划定index
       playerVideoLoad(Media(localVideoInformation["uri"]),localVideoInformation["audioUri"] as String?);
-
       
     return recordDuration;
 
