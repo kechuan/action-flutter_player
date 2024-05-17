@@ -38,6 +38,7 @@ jobs:
         with:
           body_path: document/RELEASE.txt
           files: build/dist/*/*.zip
-        env: GITHUB_TOKEN: ${{ secrets.Tokens }}
+        env: 
+          GITHUB_TOKEN: ${{ secrets.Tokens }}
         #完成
       - run: echo "windows jobs done."
