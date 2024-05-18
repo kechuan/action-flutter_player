@@ -33,7 +33,7 @@ jobs:
 
       # 3.4 build Windows ZIP\MSIX
       - name: Build Windows
-        run: flutter_distributor package --platform windows --targets zip --skip-clean
+        run: flutter_distributor package --platform windows --targets zip --skip-clean --name ${{ github.ref }}
 
       - name: pwd
         run: dir
@@ -43,7 +43,7 @@ jobs:
         uses: softprops/action-gh-release@v2 #用于直接传入到github release?
         with:
           tag_name: ${{ github.ref }}
-          files: ./build/dist/*/*.zip
+          files: ./dist/*/*.zip
         env: 
           GITHUB_TOKEN: ${{ secrets.Tokens }}
         #完成
