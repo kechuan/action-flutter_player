@@ -35,12 +35,15 @@ jobs:
       - name: Build Windows
         run: flutter_distributor package --platform windows --targets zip --skip-clean
 
+      - name: pwd
+        run: dir
+
       # 3.5 上传ZIP
       - name: Upload Release
         uses: softprops/action-gh-release@v2 #用于直接传入到github release?
         with:
           tag_name: ${{ github.ref }}
-          body_path: document/RELEASE.txt
+          
           files: build/dist/*/*.zip
         env: 
           GITHUB_TOKEN: ${{ secrets.Tokens }}
