@@ -33,7 +33,7 @@ jobs:
 
       # 3.4 build Windows ZIP\MSIX
       - name: Build Windows
-        run: flutter_distributor package --platform windows --targets zip --skip-clean --name ${{ github.ref }}
+        run: flutter_distributor package --platform windows --targets zip --skip-clean
 
       - name: pwd
         run: dir
