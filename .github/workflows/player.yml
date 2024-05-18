@@ -43,8 +43,7 @@ jobs:
         uses: softprops/action-gh-release@v2 #用于直接传入到github release?
         with:
           tag_name: ${{ github.ref }}
-          
-          files: build/dist/*/*.zip
+          files: ./build/dist/*/*.zip
         env: 
           GITHUB_TOKEN: ${{ secrets.Tokens }}
         #完成
