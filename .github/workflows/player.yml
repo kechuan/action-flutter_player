@@ -31,7 +31,10 @@ jobs:
       - name: Install flutter_distributor
         run: dart pub global activate flutter_distributor
 
-      # 3.4 build Windows ZIP\MSIX
+      # 3.4 build Windows zip\apk
+      - name: Build Apk
+        run: flutter_distributor package --platform android --targets apk --skip-clean
+
       - name: Build Windows
         run: flutter_distributor package --platform windows --targets zip --skip-clean
 
@@ -43,8 +46,11 @@ jobs:
         uses: softprops/action-gh-release@v2 #用于直接传入到github release?
         with:
           tag_name: ${{ github.ref }}
-          files: ./dist/*/*.zip
+          files: |
+           ./dist/*/*.zip
+           ./dist/*/*.apk
         env: 
           GITHUB_TOKEN: ${{ secrets.Tokens }}
         #完成
       - run: echo "windows jobs done."
+  
