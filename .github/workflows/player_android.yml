@@ -79,7 +79,7 @@ jobs:
 
       # check APK output
       - name: check APK output
-        run: dir /s *.apk
+        run: gci -r -filter *.apk
 
       # 3.5 上传ZIP
       - name: Upload Release
