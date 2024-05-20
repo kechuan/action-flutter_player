@@ -32,12 +32,12 @@ jobs:
       - name: set PUB_CACHE2
         run: setx /m PUB_CACHE "D:/flutter-pub"
 
-      - name: Branch name
-        id: branch_name
-        run: |
-          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
-          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
-          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+      # - name: Branch name
+      #   id: branch_name
+      #   run: |
+      #     echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+      #     echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+      #     echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
 
       #keystore部署
       - name: Get Android Keystore
@@ -86,9 +86,9 @@ jobs:
       - name: Upload Release
         uses: softprops/action-gh-release@v2 #用于直接传入到github release?
         with:
-          tag_name: $SOURCE_NAME
+          tag_name: ${{ github.ref }}
           files: |
-           .build/app/outputs/apk/production/release/*.apk
+           ./build/app/outputs/apk/production/release/*.apk
 
         env: 
           GITHUB_TOKEN: ${{ secrets.Tokens }}
