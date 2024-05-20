@@ -129,25 +129,23 @@ class OnlineVideoListItem extends StatelessWidget {
                               color: Color.fromARGB(103, 248, 187, 208)
                             )
                           ),
-                          child: Container(
-                            constraints: BoxConstraints.tight(
-                              const Size(220, 24)
-                            ),
+                          child: SizedBox(
+                            width: 180,
+                            height: 24,
+                           
                             child: Wrap(
-                              spacing: 6,
+                              spacing: 3,
                               crossAxisAlignment: WrapCrossAlignment.center,
                               
                               children: [
                             
                                 const Icon(Icons.upload),
                                 ConstrainedBox(
-                                  constraints: const BoxConstraints.tightFor(width: 80),
+                                  //给Text组件一个明确的约束 这样才会触发overflow机制
+                                  constraints: const BoxConstraints.tightFor(width: 55),
                                   child: Text(
                                     rcmdVideoInformation["author"],
                                     overflow: TextOverflow.ellipsis,
-                                                  
-                                    //textAlign: TextAlign.center, Column部分接管了 textAlign 身处在children排列当中
-                                    //必须要好好想想是不是上级布局的原因!
                                     style: const TextStyle(fontSize: 12),
                                   ),
                                 ),

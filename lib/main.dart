@@ -56,12 +56,12 @@ void main() async{
       print("external permission given.");
       await MyHive.init();
 
-      SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarBrightness: Brightness.light,
-        )
-      );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarDividerColor: Colors.transparent,
+      statusBarColor: Colors.transparent,
+    ));
 
       SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft]
@@ -88,8 +88,6 @@ class MyApp extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-    //print("your device size/ratio:${MediaQuery.sizeOf(context)},${MediaQuery.of(context).devicePixelRatio}");
-    //Get.snackbar("size:","${MediaQuery.sizeOf(context)}");
     return GetMaterialApp(
         theme: ThemeData(
           scrollbarTheme: const ScrollbarThemeData(

@@ -4,6 +4,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_player/model/playerUI_model.dart';
 //import 'package:flutter_player/model/user_model.dart';
 import 'package:flutter_player/model/video_model.dart'; 
@@ -30,18 +31,12 @@ class VideoPage extends StatelessWidget {
 
     print("videoPage -> VideoModel hashCode:${playerData.hashCode}");
 
-    //UserModel.init();
-    //playerData.initPlayer(); //否则只重写player
     playerData.playerCompletedStatusListen();
 
     playerControlPanel.videoPageContext = context;
 
     return Scaffold(
-
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(0), //小技巧 将appBar压缩近乎为0
-        child: AppBar(backgroundColor: Colors.transparent,actions: null,),
-      ),  
+      resizeToAvoidBottomInset:false,
 
       body: VideoGestureDector(
         child: LayoutBuilder(

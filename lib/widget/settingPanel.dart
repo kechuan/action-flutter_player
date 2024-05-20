@@ -1,11 +1,14 @@
 
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_player/internal/hive.dart';
-import 'package:flutter_player/internal/video_download.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/internal/show_textfield_overlay.dart';
+//import 'package:flutter_player/internal/hive.dart';
+//import 'package:flutter_player/internal/video_download.dart';
+//import 'package:flutter_player/model/playerUI_model.dart';
 import 'package:flutter_player/model/user_model.dart';
-import 'package:flutter_player/model/video_duration_record.dart';
+//import 'package:flutter_player/model/video_duration_record.dart';
 
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
@@ -23,7 +26,7 @@ class SettingPanel extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final cookieEditingController = TextEditingController();
-    final playerControlPanel = Get.find<PlayerUIModel>();
+    //final playerControlPanel = Get.find<PlayerUIModel>();
 
     settingPanelInit();
 
@@ -72,126 +75,110 @@ class SettingPanel extends StatelessWidget {
           case ConnectionState.done:{
     
             return Column(
-
+            
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
+            
                 const Padding(
                   padding:  EdgeInsets.all(12.0),
                   child: Text('Prefer Setting',textScaler: TextScaler.linear(1.4),style: TextStyle(color: Color.fromARGB(158, 43, 3, 186)),),
                 ),
-
+            
                 Expanded(
                   child: ListView.separated(
                     separatorBuilder: (_,index){
                       if(index==0||index == UserModel.configList.length-1){
                         return const Divider(thickness: 1,color: Color.fromARGB(255, 39, 37, 37),);
                       }
-
+            
                       return const SizedBox.shrink();
                       
                     },
                     itemCount: UserModel.configList.length+1, //Debug Button
                     itemBuilder: (_,index){
-
+            
                       Map<String,dynamic> configList = UserModel.configList;
-
+            
                       return ListTile(
-
+            
                         title: 
                           index == UserModel.configList.length ?
                           //Debug
-                          Wrap(
+                          const Wrap(
                             spacing: 12,
                             runSpacing: 12,
                             direction : Axis.horizontal,
                             children: [
-
-                              ElevatedButton(
-                                onPressed: (){
+            
+                              //ElevatedButton(
+                              //  onPressed: (){
                           
-                                  UserHive.getUserConfig('qualifiySetting').then((value){
-                                    print("qualifiySetting:$value");
-                                  });
+                              //    UserHive.getUserConfig('qualifiySetting').then((value){
+                              //      print("qualifiySetting:$value");
+                              //    });
                           
-                                  UserHive.getUserConfig('encodeSetting').then((value){
-                                    print("encodeSetting:$value");
-                                  });
+                              //    UserHive.getUserConfig('encodeSetting').then((value){
+                              //      print("encodeSetting:$value");
+                              //    });
                           
-                                  UserHive.getUserConfig('playMode').then((value){
-                                    print("playMode:$value");
-                                  });
-                                }, 
-                                child: const Text("User Get")
-                              ),
+                              //    UserHive.getUserConfig('playMode').then((value){
+                              //      print("playMode:$value");
+                              //    });
+                              //  }, 
+                              //  child: const Text("User Get")
+                              //),
                                           
-                              ElevatedButton(
-                                onPressed: (){
-
-                                  Duration? test = (MyHive.videoRecordDataBase.get("anime1") as VideoDurationRecord?)?.videoPosition;
-
-                                  print("$test");
-                                }, 
-                                child: const Text("video Duration Get")
-                              ),
-
-                              ElevatedButton(
-                                onPressed: (){
-
-                                  VideoDurationRecord anime1 = VideoDurationRecord();
-
-                                  anime1.videoPosition = const Duration(seconds: 15);                                  
-                                  MyHive.videoRecordDataBase.put("anime1", anime1);
-
-                                  //print(MyHive.videoRecordDataBase.get("videoPosition"));
-                                }, 
-                                child: const Text("video Duration write")
-                              ),
-
-                              ElevatedButton(
-                                onPressed: (){
-
-                                  //VideoDurationRecord dataRecord = VideoDurationRecord();
-
-                                  //print(dataRecord.videoPosition);
-                                  //print(dataRecord.videoDownloadedRecord);
-
-                                  MyHive.videoRecordDataBase.clear();
-
-                                  //print(MyHive.videoRecordDataBase.get("videoPosition"));
-                                }, 
-                                child: const Text("Video Duration Clear")
-                              ),
-
-
-
-                              ElevatedButton(
-                                onPressed: (){
-                                  MyHive.videoDownloadDataBase.clear();
-                                }, 
-                                child: const Text("Video Download Clear")
-                              ),
-
-                              ElevatedButton(
-                                onPressed: (){
-                                  mergeVideo("为什么现在没有侧插弹匣的冲锋枪了？","mp4");
-                                }, 
-                                child: const Text("Video Merge")
-                              ),
-
-                              
-
-                             
-
-                              ElevatedButton(
-                                onPressed: (){
-                                  playerControlPanel.toggleToasterMessage();
+                              //ElevatedButton(
+                              //  onPressed: (){
+            
+                              //    Duration? test = (MyHive.videoRecordDataBase.get("anime1") as VideoDurationRecord?)?.videoPosition;
+            
+                              //    print("$test");
+                              //  }, 
+                              //  child: const Text("video Duration Get")
+                              //),
+            
+                              //ElevatedButton(
+                              //  onPressed: (){
+                              //    VideoDurationRecord anime1 = VideoDurationRecord();
+            
+                              //    anime1.videoPosition = const Duration(seconds: 15);                                  
+                              //    MyHive.videoRecordDataBase.put("anime1", anime1);
+                              //  }, 
+                              //  child: const Text("video Duration write")
+                              //),
+            
+                              //ElevatedButton(
+                              //  onPressed: (){
+                              //    MyHive.videoRecordDataBase.clear();
+                              //  }, 
+                              //  child: const Text("Video Duration Clear")
+                              //),
+            
+                              //ElevatedButton(
+                              //  onPressed: (){
+                              //    MyHive.videoDownloadDataBase.clear();
+                              //  }, 
+                              //  child: const Text("Video Download Clear")
+                              //),
+            
+                              ////ElevatedButton(
+                              ////  onPressed: (){
+                              ////    mergeVideo("为什么现在没有侧插弹匣的冲锋枪了？","mp4");
+                              ////  }, 
+                              ////  child: const Text("Video Merge")
+                              ////),
+                
+            
+                              //ElevatedButton(
+                              //  onPressed: (){
+                              //    playerControlPanel.toggleToasterMessage();
                           
-                                }, 
-                                child: const Text("Toast")
-                              ),
-
-
+                              //  }, 
+                              //  child: const Text("Toast")
+                              //),
+            
+            
                             ],
                           ) :
                 
@@ -203,7 +190,7 @@ class SettingPanel extends StatelessWidget {
                                   Text("${configList.keys.elementAt(index)}:"),
                                   Builder(
                                     builder: (_){
-
+            
                                       switch(configList.keys.elementAt(index)){
                                         case 'cookie':{
                                 
@@ -218,7 +205,7 @@ class SettingPanel extends StatelessWidget {
                                                   //bool obxUpdate = UserModel.editingCookieFlag.value;
                                                    return Row(
                                                      children: [
-
+            
                                                         !UserModel.isModifiedCookie ?
                                                         const SizedBox.shrink() :
                                                           UserModel.verifingCookie.value ?
@@ -247,7 +234,7 @@ class SettingPanel extends StatelessWidget {
                                             
                                                 Row(
                                                   children: [
-
+            
                                                     //close
                                                     Obx((){
                                                       return Visibility(
@@ -255,7 +242,7 @@ class SettingPanel extends StatelessWidget {
                                                         maintainState: UserModel.editingCookieFlag.value,
                                                         child: IconButton(
                                                           onPressed: (){
-
+            
                                                             UserModel.editingCookieFlag.value = !UserModel.editingCookieFlag.value;
                                                             if(UserModel.editingCookieFlagAnimated.value == false) UserModel.editingCookieFlagAnimated.value = true;
                                                             
@@ -266,7 +253,7 @@ class SettingPanel extends StatelessWidget {
                                                         ),
                                                       );
                                                     }),
-
+            
                                                     IconButton(
                                                       onPressed: (){
                                                         //弹出 TextInput(简单) 或者 
@@ -274,15 +261,15 @@ class SettingPanel extends StatelessWidget {
                                                         //不过那样的话。。是不是得用AnimatedList了呢。。
                                                                     
                                                         if(UserModel.editingCookieFlag.value){
-
-
+            
+            
                                                           if(cookieEditingController.value.text != UserModel.configList["cookie"]){
                                                             UserModel.isModifiedCookie = true;
-
+            
                                                             UserModel.verfiyCookie(cookieEditingController.value.text);
                                                             // succ => write down Hive, fail => don't change.
                                                           }
-
+            
                                                         }
                                                                                                 
                                                         UserModel.editingCookieFlag.value = !UserModel.editingCookieFlag.value;
@@ -302,7 +289,7 @@ class SettingPanel extends StatelessWidget {
                                               ],
                                             );
                                           });
-
+            
                                         }
                                 
                                         case 'qualifiySetting':{
@@ -339,7 +326,7 @@ class SettingPanel extends StatelessWidget {
                                           return const Text("null");
                                 
                                         }
-
+            
                                         case 'encodeSetting':{
                                 
                                           if(configList['qualifiySetting'] != null){
@@ -381,19 +368,19 @@ class SettingPanel extends StatelessWidget {
                                         }
                                 
                                         case 'playMode':{
-
-
+            
+            
                                           if(configList['playMode']!=null){
-
+            
                                             return Obx((){
                                               return Wrap(
                                                 crossAxisAlignment: WrapCrossAlignment.center,
                                                 spacing: 12,
                                                 children: [
-
+            
                                                   const Text("Local:"),
-
-
+            
+            
                                                   SizedBox( //DropdownButton:isExpanded 来填充 这个sizedBox 给的宽度 相当于紧约束
                                                     width: 80,
                                                     child: DropdownButton<String>(
@@ -417,10 +404,10 @@ class SettingPanel extends StatelessWidget {
                                                         
                                                     ),
                                                   ),
-
-
+            
+            
                                                   const Text("online:"),
-
+            
                                                   SizedBox( //DropdownButton:isExpanded 来填充 这个sizedBox 给的宽度 相当于紧约束
                                                     width: 80,
                                                     child: DropdownButton<String>(
@@ -468,7 +455,7 @@ class SettingPanel extends StatelessWidget {
                                       
                                       maintainState: true, 
                                       maintainAnimation: true,
-
+            
                                       visible: UserModel.editingCookieFlagAnimated.value,
                                       
                                       child: AnimatedOpacity(
@@ -477,26 +464,91 @@ class SettingPanel extends StatelessWidget {
                                         
                                         child: SizedBox(
                                           height: 100,
-                                          child: TextField( 
-                                            controller: cookieEditingController,
-                                            //expands true: 其width属性则已经变成松约束去准备填充 
-                                            //但是height属性却依旧需要手动给 可能是Column的原因?
-                                            minLines: null,
-                                            maxLines: null,
-                                          
-                                            expands: true,
+                                            child: TextField( 
+                                              
+                                              controller: cookieEditingController,
+                                              //expands true: 其width属性则已经变成松约束去准备填充 
+                                              //但是height属性却依旧需要手动给 可能是Column的原因?
+                                              minLines: null,
+                                              maxLines: null,
+                                            
+                                              expands: true,
+
+                                              onTap: () {
+                                                if(Platform.isAndroid){
+                                                  OverlayEntry overlayEntry = OverlayEntry(builder: (context) {return const SizedBox.shrink();},);
+                                                  print("overlay trigged");
+                                                  
+                                                  TextEditingController overlayController = TextEditingController();
+                                                  //ShowTextFieldOverlay(cookieEditingController:cookieEditingController);
+                                                  OverlayState overlayState = Overlay.of(context);
+                                                  overlayEntry = OverlayEntry(
+                                                    //canSizeOverlay:true,
+                                                    builder: (context){
+                                                      print("Media systemGestureInsets:${MediaQuery.systemGestureInsetsOf(context).right}");
+                                                      
+                                                      return  Stack(
+                                                        children:
+                                                        [
+                                                          Positioned(
+                                                          bottom: MediaQuery.of(context).viewInsets.bottom,
+                                                          //right:MediaQuery.of(context).systemGestureInsets.right,
+                                                          right:MediaQuery.systemGestureInsetsOf(context).right,
+                                                          height: 62,
+                                                          width: MediaQuery.sizeOf(context).width - MediaQuery.systemGestureInsetsOf(context).right,
+                                                          child: Material(
+                                                            child: Row(
+                                                              children: [
+                                                                //const Spacer(),
+                                                                Expanded(
+                                                                  //flex: 6,
+                                                                  child: TextField(
+                                                                    controller: overlayController,
+                                                                    decoration: const InputDecoration(
+                                                                      border: OutlineInputBorder(),
+                                                                      labelText: 'Enter text',
+                                                                    ), 
+                                                                  ),
+                                                                ),
+                                                            
+                                                                TextButton(
+                                                                  onPressed: (){
+                                                                    cookieEditingController.value = overlayController.value;
+                                                                    overlayEntry.remove();
+                                                                  }, 
+                                                                  child: const Text("确定")
+                                                                  
+                                                                ),
+                                                            
+                                                                  //const Spacer(),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      
+                                                        ]
+                                                        
+                                                         );
+                                                    });
+
+                                                  overlayState.insert(overlayEntry);
+                                                }
+                                                
+                                              },
+                                            ),
                                           ),
-                                        ),
 
-                                        onEnd: () {
+                                          onEnd: () {
+              
+                                            if(UserModel.editingCookieFlag.value == false){
+                                              UserModel.editingCookieFlagAnimated.value = false;
+                                            }
+                                            
+                                          },
 
-                                          if(UserModel.editingCookieFlag.value == false){
-                                            UserModel.editingCookieFlagAnimated.value = false;
-                                          }
                                           
-                                        },
-
-
+            
+            
                                       )
                                     );
                                 }
@@ -515,8 +567,8 @@ class SettingPanel extends StatelessWidget {
                     }
                   )
                 ),
-
-
+            
+            
               ],
             );
             
