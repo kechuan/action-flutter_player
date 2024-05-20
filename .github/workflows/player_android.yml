@@ -20,6 +20,10 @@ jobs:
       - name: mkdir PUB_CACHE
         run: mkdir "D:/flutter-pub"
 
+      - name: set PUB_CACHE
+        run: echo "PUB_CACHE='D:/flutter-pub'" >> $GITHUB_ENV
+        # run: setx /m PUB_CACHE "D:/flutter-pub"
+
       # 设置Flutter环境 使用flutter_action
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
