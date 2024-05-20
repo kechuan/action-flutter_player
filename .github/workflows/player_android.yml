@@ -79,19 +79,7 @@ jobs:
 
       # check APK output
       - name: check APK output
-        run: cd android/app/build/outputs/production/release && dir
-
-      #back_ward
-      - name: goback
-        run: cd D:\a\action-flutter_player\action-flutter_player
-
-      # check APK output
-      - name: check APK output2
-        run: cd build/outputs/ && dir
-
-       #back_ward
-      - name: goback
-        run: cd D:\a\action-flutter_player\action-flutter_player
+        run: dir /s *.apk
 
       # 3.5 上传ZIP
       - name: Upload Release
@@ -101,7 +89,8 @@ jobs:
           files: |
            ./dist/*/*.zip
            ./dist/*/*.apk
-           .android/app/build/outputs/production/release/*.apk
+           .android/app/build/outputs/*/*/*.apk
+           .build/app/build/outputs/*/*/*.apk
 
         env: 
           GITHUB_TOKEN: ${{ secrets.Tokens }}
