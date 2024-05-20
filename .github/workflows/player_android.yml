@@ -26,25 +26,14 @@ jobs:
         with: # with == arg?
           flutter-version: "3.19.x"
           cache: true
-          pub-cache-key: "flutter-pub" # optional, change this to force refresh cache of dart pub get dependencies
+          pub-cache-key: "flutter-pub-change" # optional, change this to force refresh cache of dart pub get dependencies
           pub-cache-path: "D:/flutter-pub" # optional, change this to specify the cache path
-
-      - name: check PUB_CACHE
-        run: echo %PUB_CACHE%
 
       - name: set PUB_CACHE
         run: echo "PUB_CACHE=D:/flutter-pub" >> $GITHUB_ENV
 
       - name: set PUB_CACHE2
         run: setx /m PUB_CACHE "D:/flutter-pub"
-
-      - name: check PUB_CACHE
-        run: echo %PUB_CACHE%
-
-      - run: echo PUB-CACHE-PATH=${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
-
-      - name: check PUB_CACHE
-        run: echo %PUB_CACHE%
 
       #keystore部署
       - name: Get Android Keystore
@@ -88,6 +77,22 @@ jobs:
       - name: pwd
         run: dir
 
+      # check APK output
+      - name: check APK output
+        run: cd android/app/build/outputs/production/release && dir
+
+      #back_ward
+      - name: goback
+        run: cd D:\a\action-flutter_player\action-flutter_player
+
+      # check APK output
+      - name: check APK output2
+        run: cd build/outputs/ && dir
+
+       #back_ward
+      - name: goback
+        run: cd D:\a\action-flutter_player\action-flutter_player
+
       # 3.5 上传ZIP
       - name: Upload Release
         uses: softprops/action-gh-release@v2 #用于直接传入到github release?
@@ -96,6 +101,8 @@ jobs:
           files: |
            ./dist/*/*.zip
            ./dist/*/*.apk
+           .android/app/build/outputs/production/release/*.apk
+
         env: 
           GITHUB_TOKEN: ${{ secrets.Tokens }}
         #完成
