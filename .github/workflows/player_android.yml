@@ -26,7 +26,9 @@ jobs:
         with: # with == arg?
           flutter-version: "3.19.x"
           cache: true
+          pub-cache-key: "flutter-pub" # optional, change this to force refresh cache of dart pub get dependencies
           pub-cache-path: "D:/flutter-pub" # optional, change this to specify the cache path
+
       - run: echo PUB-CACHE-PATH=${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
 
       #keystore部署
@@ -36,7 +38,7 @@ jobs:
         with:
           fileName: android.jks
           encodedString: ${{ secrets.KEYSTORE_BASE64 }}
-        
+
       - name: Create key.properties
         run: |
           echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > android/key.properties
