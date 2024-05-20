@@ -20,12 +20,6 @@ jobs:
       - name: mkdir PUB_CACHE
         run: mkdir "D:/flutter-pub"
 
-      - name: set PUB_CACHE
-        run: echo "PUB_CACHE=D:/flutter-pub" >> $GITHUB_ENV
-
-      - name: set PUB_CACHE2
-        run: setx /m PUB_CACHE "D:/flutter-pub"
-
       # 设置Flutter环境 使用flutter_action
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -35,7 +29,22 @@ jobs:
           pub-cache-key: "flutter-pub" # optional, change this to force refresh cache of dart pub get dependencies
           pub-cache-path: "D:/flutter-pub" # optional, change this to specify the cache path
 
+      - name: check PUB_CACHE
+        run: echo %PUB_CACHE%
+
+      - name: set PUB_CACHE
+        run: echo "PUB_CACHE=D:/flutter-pub" >> $GITHUB_ENV
+
+      - name: set PUB_CACHE2
+        run: setx /m PUB_CACHE "D:/flutter-pub"
+
+      - name: check PUB_CACHE
+        run: echo %PUB_CACHE%
+
       - run: echo PUB-CACHE-PATH=${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
+
+      - name: check PUB_CACHE
+        run: echo %PUB_CACHE%
 
       #keystore部署
       - name: Get Android Keystore
@@ -59,6 +68,8 @@ jobs:
           
       - name: Restore Packages
         run: flutter pub get
+        env:
+          PUB_CACHE: "D:/flutter-pub"
 
       # 3.3 设置flutter_distributor环境 用于打包发布
       - name: Install flutter_distributor
