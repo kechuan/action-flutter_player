@@ -29,11 +29,15 @@ jobs:
           pub-cache-key: "flutter-pub-change" # optional, change this to force refresh cache of dart pub get dependencies
           pub-cache-path: "D:/flutter-pub" # optional, change this to specify the cache path
 
-      - name: set PUB_CACHE
-        run: echo "PUB_CACHE=D:/flutter-pub" >> $GITHUB_ENV
-
       - name: set PUB_CACHE2
         run: setx /m PUB_CACHE "D:/flutter-pub"
+
+      - name: Branch name
+        id: branch_name
+        run: |
+          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
 
       #keystore部署
       - name: Get Android Keystore
@@ -74,20 +78,21 @@ jobs:
       - name: pwd
         run: dir
 
-      # check APK output
-      - name: check APK output
-        run: gci -r -filter *.apk
+      # # check APK output
+      # - name: check APK output
+      #   run: gci -r -filter *.apk
 
       # 3.5 上传ZIP
       - name: Upload Release
         uses: softprops/action-gh-release@v2 #用于直接传入到github release?
         with:
-          tag_name: ${{ github.ref }}
+          tag_name: $SOURCE_NAME
           files: |
            .build/app/outputs/apk/production/release/*.apk
 
         env: 
           GITHUB_TOKEN: ${{ secrets.Tokens }}
+          SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
         #完成
       - run: echo "build jobs done."
   
