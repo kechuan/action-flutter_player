@@ -71,9 +71,6 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD}}
 
-      # - name: Build Windows
-      #   run: flutter_distributor package --platform windows --targets zip --skip-clean
-
       - name: pwd
         run: dir
 
@@ -87,10 +84,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           files: |
-           ./dist/*/*.zip
-           ./dist/*/*.apk
-           .android/app/build/outputs/*/*/*.apk
-           .build/app/build/outputs/*/*/*.apk
+           .build/app/outputs/apk/production/release/*.apk
 
         env: 
           GITHUB_TOKEN: ${{ secrets.Tokens }}
