@@ -4,6 +4,7 @@
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
 	
 	
         {
@@ -24,7 +25,7 @@
             "name": "player-release-windows",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release", //而profile则会呼出 performance page
+            "flutterMode": "release", 
             "program": "./lib/main.dart"
         },
 
@@ -36,7 +37,7 @@
 				"--flavor",
 				"development"
 			],
-            "flutterMode": "debug", //而profile则会呼出 performance page
+            "flutterMode": "debug", //debug 会呼出 Flutter widget inspection
             "program": "./lib/main.dart"
         },
 		{
@@ -58,7 +59,7 @@
 				"--flavor",
 				"production"
 			],
-            "flutterMode": "release", //debug 会呼出 Flutter widget inspection
+            "flutterMode": "release", 
             "program": "./lib/main.dart"
         },
 
