@@ -65,7 +65,7 @@ jobs:
 
       # 3.4 build apk
       - name: Build Apk
-        run: flutter_distributor package --platform android --targets apk --build_flavor production --build-target-platform android-arm64 --skip-clean
+        run: flutter_distributor package --platform android --targets apk --build-flavor production --build-target-platform android-arm64 --skip-clean
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD}}
