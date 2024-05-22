@@ -1,72 +1,141 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_player/internal/request_encode.dart';
+import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:get/get.dart';
 
+class TextFieldOverlay{
 
-class ShowTextFieldOverlay extends StatelessWidget {
+  TextFieldOverlay({
+    required this.context,
+    this.searchType,
+    this.name,
+    this.outerTextEditingController,
+    this.outerFocusNode
+  }){
+    showTextFieldOverlay(context);
+  }
 
-  late OverlayEntry _overlayEntry;
-  final TextEditingController cookieEditingController;
-  
+  final BuildContext context;
+
+  final bool? searchType;
+  final String? name;
+  final TextEditingController? outerTextEditingController;
+
+  final FocusScopeNode? outerFocusNode;
+  final FocusScopeNode overlayFocus = FocusScopeNode();
+
   final TextEditingController overlayController = TextEditingController();
 
-  ShowTextFieldOverlay({super.key,required this.cookieEditingController});
+  void showTextFieldOverlay(BuildContext context){
 
-  void showOverlay(BuildContext context) {
-    
+    final playerControlPanel = Get.find<PlayerUIModel>();
+
+    print("overlay build");
+
+
     OverlayState overlayState = Overlay.of(context);
-    _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 0,
-        right: 0,
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            color: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
 
-                TextField(
-                  controller: overlayController,
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: '临时输入框'),
+      playerControlPanel.currentOverlayEntry = OverlayEntry(
+        
+        builder: (context){
+          print("Media systemGestureInsets:${MediaQuery.systemGestureInsetsOf(context).right}");
+
+          if(outerTextEditingController !=null && outerFocusNode != null){
+
+            outerFocusNode!.addListener(() {
+              if(!outerFocusNode!.hasFocus){
+                print("outerFocusNode unfocus trigged");
+                overlayFocus.requestFocus();
+              }
+            });
+
+            outerFocusNode!.unfocus();
+          }
+
+          return Stack(
+            children:
+            [
+              Positioned(
+                bottom: MediaQuery.viewInsetsOf(context).bottom,
+                
+                right:MediaQuery.systemGestureInsetsOf(context).right,
+                height: 62,
+                width: MediaQuery.sizeOf(context).width - MediaQuery.systemGestureInsetsOf(context).right,
+                child: Material(
+                  child: Row(
+                  children: [
+          
+                    ConstrainedBox(
+                      constraints: const BoxConstraints.tightFor(width: 60),
+                      child: Center(child: Text("${name??"name"}:")),
+                    ),
+                    
+                    Expanded(
+                      child: TextField(
+                        focusNode: overlayFocus,
+                        controller: overlayController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Enter text',
+                        ), 
+                      ),
+                    ),
+                                                                            
+                    TextButton(
+                      onPressed: (){
+                        playerControlPanel.currentOverlayEntry!.remove();
+                        overlayFocus.unfocus();
+          
+                        if(outerFocusNode != null){
+                          outerFocusNode!.unfocus();
+                          
+                        }
+                        
+                      }, 
+                      child: const Text("取消")
+                      
+                    ),
+                                                                            
+                    TextButton(
+                      onPressed: (){
+          
+                        if(outerTextEditingController!=null){
+                          outerTextEditingController!.value = overlayController.value;
+                        }
+          
+                        overlayFocus.unfocus();
+                        playerControlPanel.currentOverlayEntry!.remove();
+          
+                        if(outerFocusNode != null){
+                          
+                          print("outerFocusNode remove");
+          
+                          if(searchType!=null && searchType == true){
+                            searchRequestResponse(overlayController.value.text);
+                          }
+                          
+                          outerFocusNode!.unfocus();
+          
+                        }
+                      }, 
+                      child: const Text("确定")
+                      
+                    ),
+          
+                  ],
                 ),
-
-                const SizedBox(height: 8.0),
-
-                ElevatedButton(
-                  onPressed: () {
-                     cookieEditingController.text = overlayController.text;
-                    _overlayEntry.remove();
-                  },
-                  child: const Text('确定'),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-    overlayState.insert(_overlayEntry);
+              ),
+          
+            ]
+            
+          );
+        });
+
+    overlayState.insert((playerControlPanel.currentOverlayEntry) as OverlayEntry);
+
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: cookieEditingController,
-              readOnly: true,
-              onTap: () => showOverlay(context),
-              decoration: const InputDecoration(hintText: '点击输入'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 }

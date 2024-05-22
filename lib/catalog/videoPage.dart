@@ -244,7 +244,6 @@ class VideoPage extends StatelessWidget {
             }
         ),
         
-    
       ),
       
       endDrawer: const DrawVideoSelectPanel(),

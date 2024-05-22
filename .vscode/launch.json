@@ -5,8 +5,7 @@
     "version": "0.2.0",
     "configurations": [
 
-	
-	
+
         {
             "name": "player-debug-windows",
             "request": "launch",
@@ -28,16 +27,15 @@
             "flutterMode": "release", 
             "program": "./lib/main.dart"
         },
-
 		{
             "name": "player-debug-apk",
             "request": "launch",
             "type": "dart",
 			"args": [
 				"--flavor",
-				"development"
+				"production",
 			],
-            "flutterMode": "debug", //debug 会呼出 Flutter widget inspection
+            "flutterMode": "debug", 
             "program": "./lib/main.dart"
         },
 		{
@@ -46,9 +44,9 @@
             "type": "dart",
 			"args": [
 				"--flavor",
-				"staging"
+				"production"
 			],
-            "flutterMode": "profile", //而profile则会呼出 performance page
+            "flutterMode": "profile", 
             "program": "./lib/main.dart"
         },
 		{

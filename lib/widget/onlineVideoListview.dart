@@ -1,10 +1,12 @@
 
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_player/internal/enum_define.dart';
 import 'package:flutter_player/internal/hive.dart';
 import 'package:flutter_player/internal/request_encode.dart';
+import 'package:flutter_player/internal/show_textfield_overlay.dart';
 import 'package:flutter_player/model/playerUI_model.dart';
 import 'package:flutter_player/model/video_model.dart';
 import 'package:flutter_player/widget/UnVisibleResponse.dart';
@@ -21,6 +23,18 @@ class OnlineVideoListview extends StatelessWidget {
     final playerControlPanel = Get.find<PlayerUIModel>();
 
     final searchFieldController = TextEditingController();
+    final FocusScopeNode searchFieldFocus = FocusScopeNode();
+
+    //if(Platform.isAndroid){
+    //  searchFieldFocus.addListener(() {
+    //    print("searchFieldFocus trigged");
+    //    print("text:${searchFieldController.value.text}");
+    //    if(searchFieldController.value.text.isNotEmpty && !searchFieldFocus.hasFocus){
+    //      print("Overlay search");
+    //      searchRequestResponse(searchFieldController.value.text);
+    //    }
+    //  });
+    //}
 
       return Column(
         children: [
@@ -120,24 +134,44 @@ class OnlineVideoListview extends StatelessWidget {
                           child: 
                             TextField(
                               decoration: const InputDecoration(border: InputBorder.none),
-                   
+                              focusNode: searchFieldFocus,
                               controller: searchFieldController,
                                                 
                               onTapAlwaysCalled: true,
                               onTap: () {
-                                playerControlPanel.searchingFocus.value = true;
+
+                                if(Platform.isAndroid){
+                                  
+                                  TextFieldOverlay(
+                                    searchType:true,
+                                    name: playerControlPanel.searchType.value,
+                                    context: context,
+                                    outerTextEditingController: searchFieldController,
+                                    outerFocusNode: searchFieldFocus,
+                                  );
+
+
+                                }
+
+                                else{
+                                  playerControlPanel.searchingFocus.value = true;
+                                }
+                                
+
+
                               },
                                                 
                               onChanged: (value) {
                                 playerControlPanel.searchingFocus.value = true;
                               },
+
+                              
                               
                               onEditingComplete: () {
+                                print("editing completed trigged");
                                 playerControlPanel.searchingFocus.value = false;
             
                                 print("searchContent:${searchFieldController.value.text}");
-
-                                //liveRoomResponse(searchFieldController.value.text);
                                 searchRequestResponse(searchFieldController.value.text);
             
                               },

@@ -22,6 +22,11 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def flutterPlatform = localProperties.getProperty('target-platform')
+if (flutterPlatform == null) {
+    flutterPlatform = 'android-arm64'
+}
+
 android {
     namespace "com.example.flutter_player"
 
@@ -37,8 +42,6 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-
-
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -66,25 +69,19 @@ android {
     flavorDimensions = ["flavor-type"]
 
     productFlavors{
-        development{
-            dimension "flavor-type"
-        }
-        staging{
-            dimension "flavor-type"
-        }
         production{
             dimension "flavor-type"
         }
     }
 
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'arm64-v8a'
-            universalApk true
-        }
-    }
+//    splits {
+//        abi {
+//            enable true
+//            reset()
+//            include 'arm64-v8a'
+//            universalApk true
+//        }
+//    }
 
 }
 

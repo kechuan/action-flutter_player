@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_player/internal/enum_define.dart';
 import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
@@ -62,6 +63,9 @@ class PlayerUIModel extends GetxController{
   bool isLocalPlayListDeleteMode = false;
   bool isDownloadTaskDeleteMode = false;
 
+  //OverlayEntry? currentOverlayEntry = OverlayEntry(builder: (context) {return const SizedBox.shrink();});
+  OverlayEntry? currentOverlayEntry;
+
   BuildContext? videoPageContext;
   BuildContext? videoControlPanelContext;
 
@@ -83,9 +87,6 @@ class PlayerUIModel extends GetxController{
 
         updatePanelTitle();
         update(["controlPanel"]);
-        
-
-        
 
       }
     }

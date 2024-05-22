@@ -31,8 +31,8 @@ class RelatedVideoListItem extends StatelessWidget {
                 imageUrl: relatedVideoInformation["pic"],
                 imageBuilder: (_,imageProvider){
                   return Container(
-                    width: 260,
-                    height: 150,
+                    width: MediaQuery.sizeOf(context).width*1/3 < 400? 260/1.3 :260,
+                    height: MediaQuery.sizeOf(context).width*1/3 < 400? 150/1.3 :150,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: imageProvider,
@@ -49,8 +49,8 @@ class RelatedVideoListItem extends StatelessWidget {
 
                   //if(progress.downloaded != progress.totalSize){
                     return Container(
-                      width: 260,
-                      height: 150,
+                    width: MediaQuery.sizeOf(context).width*1/3 < 400? 260/1.3 :260,
+                    height: MediaQuery.sizeOf(context).width*1/3 < 400? 150/1.3 :150,
 
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
@@ -65,47 +65,9 @@ class RelatedVideoListItem extends StatelessWidget {
                 },
               ),
           
-              //Image.network(
-                    
-              //  relatedVideoInformation["pic"],
-              //  //[待修改]
-              //  //等到widget inspector正常之后查看这个原因
-              //  width: 260,
-              //  height: 150,
-              
-              //  loadingBuilder:(context, child, loadingProgress){
-          
-              //    if(loadingProgress?.cumulativeBytesLoaded == loadingProgress?.expectedTotalBytes){
-              //        return ClipRRect(
-              //          borderRadius:BorderRadius.circular(16),
-              //          child: SizedBox(child: child),
-              //        );
-              //    }
-          
-              //    print("loading: $loadingProgress");
-              
-              //    return Container(
-              //      width: 250,
-              //      height: 150,
-              //      decoration: BoxDecoration(
-              //        borderRadius: BorderRadius.circular(16),
-              //        color: Colors.grey,
-              //      ),
-                    
-              //      child: const Center(
-              //        child: Text("loading..."),
-              //      ),
-              //    );
-          
-              //  },
-              
-              //  fit: BoxFit.cover,
-                
-              //),
-        
               SizedBox(
-                width: 260,
-                height: 100, //half
+                width: MediaQuery.sizeOf(context).width*1/3 < 400? 260/1.3 :260,
+                height: MediaQuery.sizeOf(context).width*1/3 < 400? 100/1.3 :100,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
@@ -121,8 +83,9 @@ class RelatedVideoListItem extends StatelessWidget {
         
               Positioned(
                 child: Container(
-                  constraints: const BoxConstraints( //必须加约束 不然Text无法overflow
-                    maxWidth: 250
+                  constraints:  BoxConstraints( //必须加约束 不然Text无法overflow
+                    maxWidth: MediaQuery.sizeOf(context).width*1/3 < 400 ? 250/1.3 : 250
+                    
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(6),

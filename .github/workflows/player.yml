@@ -86,7 +86,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           files: |
-           ./build/app/outputs/apk/production/release/*.apk
+           ./build/app/outputs/flutter-apk/*.apk
            ./dist/*/*.zip
            ./dist/*/*.apk
 

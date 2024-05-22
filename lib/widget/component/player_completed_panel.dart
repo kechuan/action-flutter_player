@@ -30,7 +30,6 @@ class PlayerCompletedPanel extends StatelessWidget {
 
     print("TimeStamp: ${DateTime.now().millisecondsSinceEpoch} completedPanel build");
 
-
     return UnVisibleResponse(
       onTap: (){
         playerControlPanel.toggleControlPanelStatus();
@@ -39,8 +38,6 @@ class PlayerCompletedPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           
           children: [
-                              
-
             //attention constraint!
             Row( 
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,15 +91,13 @@ class PlayerCompletedPanel extends StatelessWidget {
                         
                       ],
                     ),
-                  )                 
+                  )
                 ],
             ),
-
-                              
+                       
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 12),
 
-             
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -139,7 +134,7 @@ class PlayerCompletedPanel extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         
                         itemCount: max(1,playerController.onlineRelatedList.length),
-                        itemExtent: 300,
+                        itemExtent: MediaQuery.sizeOf(context).width*1/3 < 400? 300/1.3 :300,
                         itemBuilder: (_,index){
 
                           if(playerController.onlineRelatedList.isEmpty){
@@ -180,10 +175,7 @@ class PlayerCompletedPanel extends StatelessWidget {
                     
                 )  
             ),
-
-            const Spacer(),
-                              
-                              
+            
           ],
         ),
     );

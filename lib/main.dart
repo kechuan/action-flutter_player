@@ -64,7 +64,7 @@ void main() async{
     ));
 
       SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft]
+        [DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]
       ).then((value) => {
         print("apply Android landscape."),
         
@@ -88,52 +88,53 @@ class MyApp extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-    return GetMaterialApp(
-        theme: ThemeData(
-          scrollbarTheme: const ScrollbarThemeData(
-            thumbColor: MaterialStatePropertyAll(Color.fromRGBO(208, 224, 140, 0.506)),
-            thickness: MaterialStatePropertyAll(4),
-          )
-        ),
-        initialRoute: "/initLoading",
-
-        getPages: [
-          GetPage(name: '/initLoading', page: () => const FutureWaitingPage()),
-
-          GetPage(
-            name: '/video', 
-            page: () => const VideoPage(),
-            transition: Transition.downToUp,
-            transitionDuration: const Duration(milliseconds: 500),
-
-            
-            binding: BindingsBuilder((){
-              Get.put<VideoModel>(VideoModel());
-              Get.put<PlayerUIModel>(PlayerUIModel());
- 
-            }),
-
-
-            //middlewares: [
-            //  VideoPageMiddleWare()
-            //]
-
-
-
-
-          ),
+    return OrientationBuilder(
+      builder: (context,orientation) {
+        print("当前的屏幕方向:$orientation");
+        return GetMaterialApp(
+            theme: ThemeData(
+              scrollbarTheme: const ScrollbarThemeData(
+                thumbColor: MaterialStatePropertyAll(Color.fromRGBO(208, 224, 140, 0.506)),
+                thickness: MaterialStatePropertyAll(4),
+              )
+            ),
+            initialRoute: "/initLoading",
         
-        ],
-
-        defaultTransition: Transition.zoom,
-        transitionDuration: const Duration(milliseconds: 500),
-
-        builder:(context, child) {
-          return Container(
-            child: child
-          );
-        }
-		  );
+            getPages: [
+              GetPage(name: '/initLoading', page: () => const FutureWaitingPage()),
+        
+              GetPage(
+                name: '/video', 
+                page: () => const VideoPage(),
+                transition: Transition.downToUp,
+                transitionDuration: const Duration(milliseconds: 500),
+        
+                
+                binding: BindingsBuilder((){
+                  Get.put<VideoModel>(VideoModel());
+                  Get.put<PlayerUIModel>(PlayerUIModel());
+         
+                }),
+        
+                //middlewares: [
+                //  VideoPageMiddleWare()
+                //]
+        
+              ),
+            
+            ],
+        
+            defaultTransition: Transition.zoom,
+            transitionDuration: const Duration(milliseconds: 500),
+        
+            builder:(context, child) {
+              return Container(
+                child: child
+              );
+            }
+        		  );
+      }
+    );
 		 
   }
 }

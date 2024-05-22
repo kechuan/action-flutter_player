@@ -21,6 +21,7 @@ class VideoQualitiyLabel extends StatelessWidget {
     //区分 Local/Stream/Video模式下的 设置
     return Center(
       child: StreamBuilder(
+        //似乎不会监听播放器被销毁时的回调
         stream: playerController.player.stream.videoParams, 
         builder: (_,snapshot){
 
