@@ -134,11 +134,13 @@ class UserModel{
 
     verifingCookie.value = true;
 
+    RegExp sessdataHeader = RegExp("SESSDATA=.*?;");
+
       Dio().get(
         requestUri,
         options: Options(
           headers: {
-            "cookie":"SESSDATA=$sessdata" 
+            "cookie": sessdataHeader.hasMatch(sessdata) ? sessdata : "SESSDATA=$sessdata" 
           },
           sendTimeout: const Duration(seconds: 3),
           receiveTimeout: const Duration(seconds: 3),

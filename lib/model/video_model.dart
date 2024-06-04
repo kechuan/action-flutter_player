@@ -53,6 +53,10 @@ class VideoModel extends GetxController{
       "size":[]
 
     };
+
+    final Map<String,String> rcmdDownloadVideoQualityMap = {};
+    final List<dynamic> rcmdDownloadQualitySize = [];
+    String? rcmdDownloadAudioUrl;
     
     int currentPlayingLocalVideoIndex = 1;
 
@@ -164,7 +168,7 @@ class VideoModel extends GetxController{
     }
   }
 
-  void playerVideoLoad(Playable video,[String? dashAudioUri]) async {
+  void playerVideoLoad({required Playable video,String? dashAudioUri}) async {
 
     final playerControlPanel = Get.find<PlayerUIModel>();
 
@@ -249,7 +253,8 @@ class VideoModel extends GetxController{
 
     }
 
-  Future<Media> parsingVideo(String orignalUrl,bool dashFlag,[bool? videoLoadFlag]) async {
+  //Future<Media> parsingVideo(String orignalUrl,bool dashFlag,[bool? videoLoadFlag]) async {
+  Future<Media> parsingVideo({required String orignalUrl,required bool dashFlag, bool? videoLoadFlag, bool? isrcmd}) async {
 
     Media onlineMediaInformation = Media("");
 
@@ -307,6 +312,11 @@ class VideoModel extends GetxController{
 
         Map<String,String> videoQualityInforamtion = currentPlayingInformation['qualityMap'];
         List<dynamic> sizeInformation = currentPlayingInformation["size"];
+
+        if(isrcmd!=null && isrcmd == true){
+          videoQualityInforamtion = rcmdDownloadVideoQualityMap;
+          sizeInformation = rcmdDownloadQualitySize;
+        }
 
         if(dashFlag && UserModel.isLogined){
 
@@ -406,8 +416,17 @@ class VideoModel extends GetxController{
           parsingVideoUrl = videoInforamtion[(encodeStack*qualifyOffset)+codecOffset]["baseUrl"];
           parsingAudioUrl = selectedAudioInformation["baseUrl"];
 
-          currentPlayingInformation["videoUrl"] = parsingVideoUrl;
-          currentPlayingInformation["audioUrl"] = parsingAudioUrl;
+
+          if(isrcmd!=null && isrcmd == true){
+            rcmdDownloadAudioUrl = parsingAudioUrl;
+          }
+
+          else{
+            currentPlayingInformation["videoUrl"] = parsingVideoUrl;
+            currentPlayingInformation["audioUrl"] = parsingAudioUrl;
+          }
+
+          
 
           print("accept_description:${accept_description}, accept_quality:${accept_quality}");
 
@@ -415,7 +434,17 @@ class VideoModel extends GetxController{
 
         else{
           parsingVideoUrl = response.data["data"]["durl"][0]["url"];
-          currentPlayingInformation["videoUrl"] = parsingVideoUrl;
+
+          if(isrcmd!=null && isrcmd == true){
+            rcmdDownloadQualitySize.add({"高清 1080P":parsingVideoUrl});
+          }
+
+          else{
+            currentPlayingInformation["videoUrl"] = parsingVideoUrl;
+          }
+
+          
+
           sizeInformation.add(response.data["data"]["durl"][0]["size"]/1024/1024); //durl请求的视频size的大小是 Byte为单位
         }
 
@@ -426,7 +455,7 @@ class VideoModel extends GetxController{
 
         //debug模式 置为false时 则只输出文字
         if(videoLoadFlag==null || videoLoadFlag==true){
-          playerVideoLoad(onlineMediaInformation,parsingAudioUrl);
+          playerVideoLoad(video: onlineMediaInformation,dashAudioUri:parsingAudioUrl);
         }
 
         else{
@@ -492,7 +521,10 @@ class VideoModel extends GetxController{
     currentPlayingInformation["bvid"] = onlineVideoInformation["bvid"];
     currentPlayingInformation["cid"] = onlineVideoInformation["cid"];
 
-    parsingVideo("${SuffixHttpString.baseUrl}${PlayerApi.playerUri}?bvid=${onlineVideoInformation["bvid"]}&cid=${onlineVideoInformation["cid"]}&high_quality=1&platform=html5&qn=112",true); //Dash Request
+    parsingVideo(
+      orignalUrl: "${SuffixHttpString.baseUrl}${PlayerApi.playerUri}?bvid=${onlineVideoInformation["bvid"]}&cid=${onlineVideoInformation["cid"]}&high_quality=1&platform=html5&qn=112",
+      dashFlag: true
+    ); //Dash Request
 
     //parsingVideo("${SuffixHttpString.baseUrl}${PlayerApi.playerUri}?bvid=${onlineVideoInformation["bvid"]}&cid=${onlineVideoInformation["cid"]}&high_quality=1&platform=html5&qn=112",true,false); //3rd arg:Debug use
 
@@ -509,7 +541,7 @@ class VideoModel extends GetxController{
       currentPlayingInformation["title"] = localVideoInformation["title"];
       
       //重新划定index
-      playerVideoLoad(Media(localVideoInformation["uri"]),localVideoInformation["audioUri"] as String?);
+      playerVideoLoad(video:Media(localVideoInformation["uri"]),dashAudioUri: localVideoInformation["audioUri"] as String?);
       
     return recordDuration;
 
@@ -545,11 +577,11 @@ class VideoModel extends GetxController{
       Duration currentPosition = player.state.position;
 
       playerVideoLoad(
-        Media(
+        video: Media(
           videoUrl,
           httpHeaders:HttpApiClient.broswerHeader
         ),
-        currentPlayingInformation["audioUrl"]
+        dashAudioUri: currentPlayingInformation["audioUrl"]
 
       );
 

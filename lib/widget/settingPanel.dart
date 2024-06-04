@@ -8,7 +8,6 @@ import 'package:flutter_player/model/playerUI_model.dart';
 import 'package:flutter_player/model/user_model.dart';
 
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/dialog/dialog_route.dart';
 import 'package:media_kit/media_kit.dart';
 
 class SettingPanel extends StatelessWidget {
@@ -71,7 +70,13 @@ class SettingPanel extends StatelessWidget {
           }
     
           case ConnectionState.done:{
-    
+            
+          /* PopScope Fail Case */
+            //Get.back();
+            //Navigator.of(context).pop();
+            //Get.back(closeOverlays: true);
+            //Navigator.pop(Get.overlayContext!, true);
+
             return WillPopScope(
               
               onWillPop:() async {
@@ -89,7 +94,9 @@ class SettingPanel extends StatelessWidget {
                 return false;
 
               },
-              child: Column(
+              child: 
+              
+              Column(
               
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

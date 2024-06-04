@@ -6,7 +6,7 @@ import 'package:flutter_player/internal/enum_define.dart';
 import 'package:flutter_player/internal/hive.dart';
 import 'package:flutter_player/internal/video_download.dart';
 import 'package:flutter_player/model/playerUI_model.dart';
-import 'package:flutter_player/widget/component/prompt_dialog.dart';
+
 import 'package:get/get.dart';
 
 import 'package:flutter_player/widget/UnVisibleResponse.dart';
@@ -101,47 +101,10 @@ class VideoControlPanel extends StatelessWidget {
               return Visibility(
                 visible: playerControlPanel.currentPlayingVideoType.value == VideoType.onlineVideo.index ? true : false,
                 child: IconButton(
-                  onPressed: () async {
-                    if(!playerController.localDownloadTaskQueue.containsKey(playerController.currentPlayingInformation["title"])){
-                        //弹出 下载画质选择窗
 
-                        await Get.dialog<RxMap>(
-                          Dialog(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(26),
-                                color: const Color.fromARGB(231, 85, 83, 83),
-                              ),
-                              height: 400,
-                              width: 400,
-
-                              child: const DownloadQualifySelectPanel(),
-                            ),
-                          ),
-
-                          transitionCurve: Curves.ease,
-                          transitionDuration: const Duration(milliseconds: 300)
-                          
-                        ).then((value){
-                          //value的内容是 {"name":index}
-                          print(value); 
-
-                          if(value!=null){
-                            videoDownload(
-                              value.keys.first, //name
-                              playerController.currentPlayingInformation["videoUrl"],
-                              playerController.currentPlayingInformation["size"][value.values.first.value], //size
-                              playerController.currentPlayingInformation["audioUrl"],
-                            );
-                          }
-
-                          else{
-                            print("task was existed");
-                          }
-                        });
-
-                    }
-                  },
+                  //弹出 下载画质选择窗
+                  onPressed: () async => showDownloadDialog(),
+                  
                   icon: const Icon(Icons.download,size: 26,color: Colors.white)
                 ),
               );

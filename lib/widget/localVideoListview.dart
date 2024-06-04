@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:flutter_player/internal/convert_task_queue_information.dart';
 import 'package:flutter_player/internal/enum_define.dart';
@@ -178,9 +179,9 @@ class LocalVideoListView extends StatelessWidget {
                             itemBuilder: (_,index){
                           
                               if(playerController.localPlayList.isEmpty){
-                                return const Center(
-                                  key: ValueKey("initalItem"),
-                                  child: Column(
+                                return  Center(
+                                  key: UniqueKey(),
+                                  child: const Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Padding(
@@ -470,12 +471,11 @@ class LocalVideoListView extends StatelessWidget {
                                         //为 localDownloadTaskQueue 重新赋予 cancelToken 以及令其恢复下载状态
 
                                         videoDownload(
-                                          currentVideoInformation.key,
-                                          MyHive.videoDownloadDataBase.get(currentVideoInformation.key)!.videoUrl,
-                                          MyHive.videoDownloadDataBase.get(currentVideoInformation.key)!.fileSize,
-
-                                          MyHive.videoDownloadDataBase.get(currentVideoInformation.key)?.audioUrl,
-                                          MyHive.videoDownloadDataBase.get(currentVideoInformation.key)?.rangeStart,
+                                          videoTitle:currentVideoInformation.key,
+                                          videoUrl:MyHive.videoDownloadDataBase.get(currentVideoInformation.key)!.videoUrl,
+                                          videoSize:MyHive.videoDownloadDataBase.get(currentVideoInformation.key)!.fileSize,
+                                          currentAudioUrl:MyHive.videoDownloadDataBase.get(currentVideoInformation.key)?.audioUrl,
+                                          rangeInformation:MyHive.videoDownloadDataBase.get(currentVideoInformation.key)?.rangeStart,
                                         );
 
                                         //记得合并!!

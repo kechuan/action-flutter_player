@@ -224,7 +224,7 @@ void searchRequestResponse(String searchContent){
     }
 
     case 'HLS':{
-      liveRoomResponse(searchContent);
+      liveRoomResponse(orignalRequest:searchContent);
     }
 
     //算作是Local播放
@@ -350,7 +350,7 @@ final playerControlPanel = Get.find<PlayerUIModel>();
 
 }
 
-void backupliveRoomResponse(String orignalRequest,[int? qn]) async {
+void backupliveRoomResponse({required String orignalRequest,int? qn}) async {
 
   final playerController = Get.find<VideoModel>();
   final playerControlPanel = Get.find<PlayerUIModel>();
@@ -379,7 +379,7 @@ void backupliveRoomResponse(String orignalRequest,[int? qn]) async {
             playerControlPanel.currentPlayingVideoType.value = VideoType.onlineStream.index;
 
             playerController.playerVideoLoad(
-              Media(
+              video: Media(
                 response.data["data"]["durl"][0]["url"],
                 extras:{
                   'refer':"www.bilibili.com"
@@ -424,7 +424,7 @@ void backupliveRoomResponse(String orignalRequest,[int? qn]) async {
 
 }
 
-void liveRoomResponse(String orignalRequest,[int? qn]) async {
+void liveRoomResponse({required String orignalRequest,int? qn}) async {
 
   Map<int,String> qn_Map = {
     30000: "杜比",
@@ -479,7 +479,7 @@ void liveRoomResponse(String orignalRequest,[int? qn]) async {
               print("3 Part: host > ${codec_stream['url_info'][0]['host']} api > ${codec_stream["base_url"]} params > ${codec_stream["url_info"][0]["extra"]}");
 
               playerController.playerVideoLoad(
-                Media(
+                video: Media(
                   "${codec_stream['url_info'][0]['host']}${codec_stream["base_url"]}${codec_stream["url_info"][0]["extra"]}",
                   extras:{
                     'refer':"www.bilibili.com"
@@ -541,7 +541,7 @@ void liveRoomResponse(String orignalRequest,[int? qn]) async {
               print("3 Part: host > ${codec_stream['url_info'][0]['host']} api > ${codec_stream["base_url"]} params > ${codec_stream["url_info"][0]["extra"]}");
 
               playerController.playerVideoLoad(
-                Media(
+                video: Media(
                   "${codec_stream['url_info'][0]['host']}${codec_stream["base_url"]}${codec_stream["url_info"][0]["extra"]}",
                   extras:{
                     'refer':"www.bilibili.com"

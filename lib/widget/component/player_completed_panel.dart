@@ -63,11 +63,11 @@ class PlayerCompletedPanel extends StatelessWidget {
                       //print("replay it video:${playerController.currentPlayingInformation["videoUrl"]},audio:${playerController.currentPlayingInformation["audioUrl"]}");
 
                       playerController.playerVideoLoad(
-                        Media(
+                       video: Media(
                           playerController.currentPlayingInformation["videoUrl"],
                           httpHeaders:HttpApiClient.broswerHeader
                         ),
-                        playerController.currentPlayingInformation["audioUrl"]
+                        dashAudioUri: playerController.currentPlayingInformation["audioUrl"]
                       );
 
                       
@@ -161,7 +161,10 @@ class PlayerCompletedPanel extends StatelessWidget {
                           playerController.currentPlayingInformation["bvid"] = currentRelatedVideoInformation["bvid"];
 
 
-                          playerController.parsingVideo("${SuffixHttpString.baseUrl}${PlayerApi.playerUri}?bvid=${currentRelatedVideoInformation["bvid"]}&cid=${currentRelatedVideoInformation["cid"]}&high_quality=1&platform=html5&qn=112",true); //Dash Request
+                          playerController.parsingVideo(
+                            orignalUrl: "${SuffixHttpString.baseUrl}${PlayerApi.playerUri}?bvid=${currentRelatedVideoInformation["bvid"]}&cid=${currentRelatedVideoInformation["cid"]}&high_quality=1&platform=html5&qn=112",
+                            dashFlag: true
+                          ); //Dash Request
 
                         },
                         

@@ -6,7 +6,10 @@ import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
 
 class DownloadQualifySelectPanel extends StatelessWidget {
-  const DownloadQualifySelectPanel({super.key});
+  const DownloadQualifySelectPanel({super.key,this.isrcmd,this.rcmdTitle});
+
+  final bool? isrcmd;
+  final String? rcmdTitle;
 
   //面板里面 应显示: 画质/Size(画饼:如果是多P视频 你还得那什么 所以应该显示listview)
 
@@ -21,8 +24,16 @@ class DownloadQualifySelectPanel extends StatelessWidget {
     // {name:QualifyIndex}
 
     Map<String,String> qualityMap = playerData.currentPlayingInformation["qualityMap"];
+    List<dynamic> qualitySize = playerData.currentPlayingInformation["size"];
 
-    selectedVideoItems.clear();
+    String? videoTitle = playerData.currentPlayingInformation["title"];
+
+    if(isrcmd !=null && isrcmd == true){
+      //replace target
+      qualityMap = playerData.rcmdDownloadVideoQualityMap;
+      qualitySize = playerData.rcmdDownloadQualitySize;
+      videoTitle = rcmdTitle;
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -52,7 +63,7 @@ class DownloadQualifySelectPanel extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           children: [
                             ...List.generate(
-                              playerData.currentPlayingInformation["qualityMap"].length,
+                              qualityMap.length,
                               (index){
                                 return Obx(
                                   (){
@@ -68,11 +79,12 @@ class DownloadQualifySelectPanel extends StatelessWidget {
                                       child: TextButton(
                                         
                                         onPressed: (){
-                                          //print("size Length:${playerData.currentPlayingInformation["size"].length}");
+                                          selectedVideoItems.clear();
+                                          //print("size:${qualitySize[index]}");
                                           //print(qualityMap.values.elementAt(index));
                                           selectedQualifyItem.value = index;
                                         },
-                                        child: Text(qualityMap.keys.elementAt(index),style:  TextStyle(color: playerData.currentPlayingInformation["size"][index] != null ? Colors.white : Colors.grey),)
+                                        child: Text(qualityMap.keys.elementAt(index),style:  TextStyle(color: qualitySize[index] != null ? Colors.white : Colors.grey),)
                                       ),
                                     );
                                   }
@@ -108,8 +120,8 @@ class DownloadQualifySelectPanel extends StatelessWidget {
                 return Obx(
                   (){
                     //[待修改] 不好的逻辑 因为多P的视频逻辑就肯定不会是这样
-                    String? videoTitle = playerData.currentPlayingInformation["title"];
-                    double? videoSize = playerData.currentPlayingInformation["size"][selectedQualifyItem.value];
+                    
+                    double? videoSize = qualitySize[selectedQualifyItem.value];
 
                     //TODO 修改select的 高亮颜色形状 以及默认的 selectvideoIndex 还有记得修改整个Theme里的默认的主题色(Text文字)
                     return Center(
@@ -128,7 +140,7 @@ class DownloadQualifySelectPanel extends StatelessWidget {
                           onTap: (){
                             //print(MediaQuery.sizeOf(context));
 
-                            if(playerData.currentPlayingInformation["size"][selectedQualifyItem.value]!=null){
+                            if(qualitySize[selectedQualifyItem.value]!=null){
 
                               if(selectedVideoItems.keys.contains(videoTitle)){
                                 selectedVideoItems.remove(videoTitle);
@@ -186,8 +198,8 @@ class DownloadQualifySelectPanel extends StatelessWidget {
 
                         double? videoSize;
 
-                        if((playerData.currentPlayingInformation["size"] as List).isNotEmpty){
-                          videoSize = playerData.currentPlayingInformation["size"][selectedQualifyItem.value];
+                        if((qualitySize as List).isNotEmpty){
+                          videoSize = qualitySize[selectedQualifyItem.value];
                         }
 
                         else{

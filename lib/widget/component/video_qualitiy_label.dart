@@ -93,7 +93,10 @@ class VideoQualitiyLabel extends StatelessWidget {
                   return;
                 }
 
-                playerController.parsingVideo("${SuffixHttpString.baseUrl}${PlayerApi.playerUri}?bvid=${playerController.currentPlayingInformation["bvid"]}&cid=${playerController.currentPlayingInformation["cid"]}&high_quality=1&platform=html5&qn=112",true); //Dash Request
+                playerController.parsingVideo(
+                  orignalUrl: "${SuffixHttpString.baseUrl}${PlayerApi.playerUri}?bvid=${playerController.currentPlayingInformation["bvid"]}&cid=${playerController.currentPlayingInformation["cid"]}&high_quality=1&platform=html5&qn=112",
+                  dashFlag: true
+                ); //Dash Request
                 //重新解析
               }
 

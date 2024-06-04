@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_player/internal/video_download.dart';
 import 'package:flutter_player/model/playerUI_model.dart';
 
 import 'package:flutter_player/model/video_model.dart';
@@ -159,15 +160,16 @@ class OnlineVideoListItem extends StatelessWidget {
                                 PopupMenuButton(
                                   itemBuilder: (context) {
                                     return List.generate(
-                                      3, 
+                                      1, 
                                       (index) =>  PopupMenuItem(
-                                        value: index,
-                                        child: Row(
+                                        value: "下载",
+                                        onTap:() => showDownloadDialog(bvid: rcmdVideoInformation["bvid"], cid:rcmdVideoInformation["cid"], title:rcmdVideoInformation["title"]),
+                                        child: const Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            
-                                            Text("$index")
+                                            Text("下载")
                                           ],),
+
                                       ),
                                     );
                                   },

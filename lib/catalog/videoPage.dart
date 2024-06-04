@@ -4,7 +4,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_player/model/playerUI_model.dart';
 //import 'package:flutter_player/model/user_model.dart';
 import 'package:flutter_player/model/video_model.dart'; 
@@ -94,46 +94,45 @@ class VideoPage extends StatelessWidget {
                           StreamBuilder(
                             stream: playerData.player.stream.buffering, 
                             builder:(_, snapshot) {
-                              return Visibility(
-                              //visible:playerData.videoBuffingStatus.value,
+                              return Obx(() => Visibility(
 
-                              //maintainState:playerData.videoBuffingStatus.value, //maintain 的设立与否 大概是display: none 与 opacity(1) 上的区别吧
-                              visible:playerData.player.state.buffering,
-                              maintainState:playerData.player.state.buffering, //maintain 的设立与否 大概是display: none 与 opacity(1) 上的区别吧
-                              child: Container(
-                                
-                                width: constraint.maxWidth * 1/11,
-                                height: constraint.maxHeight * 1/11,
+                                visible:playerData.player.state.buffering || !playerControlPanel.audioLoadedStatus.value,
+                                maintainState:playerData.player.state.buffering, //maintain 的设立与否 大概是display: none 与 opacity(1) 上的区别吧
+                                child: Container(
+                                  
+                                  width: constraint.maxWidth * 1/11,
+                                  height: constraint.maxHeight * 1/11,
 
-                                color:const Color.fromARGB(164, 47, 45, 45),
-                                child: const Center(
-                                  child: Text(
-                                    "Loading...",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-              
-                                  //如果是加载 则显示Loading... 如果是缓冲 则额外显示百分比 Loading... ??%
-                                  //child: StreamBuilder<Duration>(
-                                  //  stream: playerData.player.stream.buffer,
-                                  //  builder: (context, snapshot) {
-              
-                                  //    //print("${
-                                  //    //  playerData.player.state.buffer.inSeconds - playerData.player.state.position.inSeconds
-                                  //    //}");
-              
-              
-                                  //    return Text(
-                                  //      "Loading...",
-                                  //      style: TextStyle(color: Colors.white),
-                                  //    );
-                                  //  }
-                                  //),
-              
-                                )
-                              ),
+                                  color:const Color.fromARGB(164, 47, 45, 45),
+                                  child: const Center(
+                                    child: Text(
+                                      "Loading...",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                
+                                    //如果是加载 则显示Loading... 如果是缓冲 则额外显示百分比 Loading... ??%
+                                    //child: StreamBuilder<Duration>(
+                                    //  stream: playerData.player.stream.buffer,
+                                    //  builder: (context, snapshot) {
+                
+                                    //    //print("${
+                                    //    //  playerData.player.state.buffer.inSeconds - playerData.player.state.position.inSeconds
+                                    //    //}");
+                
+                
+                                    //    return Text(
+                                    //      "Loading...",
+                                    //      style: TextStyle(color: Colors.white),
+                                    //    );
+                                    //  }
+                                    //),
+                
+                                  )
+                                ),
+                              )
                             );
-                          
-                            },
+                               
+                                },
                           ),
               
                           GetBuilder(

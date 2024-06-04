@@ -47,7 +47,7 @@ class FutureWaitingPage extends StatelessWidget {
                   spacing: 12,
                   children: [
                     Icon(Icons.done),
-                    Text("done. forward Next Page")
+                    Text("done. forward Video Page")
                   ],
                 )
               ),

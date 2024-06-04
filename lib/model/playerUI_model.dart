@@ -5,7 +5,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_player/internal/enum_define.dart';
 import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
@@ -19,8 +19,11 @@ class PlayerUIModel extends GetxController{
   final VideoModel playerData = Get.find<VideoModel>();
 
   final RxBool gestureDragingStatus = false.obs;
+
+  final RxBool audioLoadedStatus = false.obs;
   final RxBool videoLoadedStatus = false.obs;
   final RxBool playerPlayingStatus = false.obs;
+  
 
   //目前用于显示loadingAudio的状态
   final RxBool playerAudioBufferingStatus = false.obs;
@@ -97,7 +100,7 @@ class PlayerUIModel extends GetxController{
     HardwareKeyboard.instance.addHandler(videoShortCutsKey);
   }
 
-  void updateSliderStatus(bool showStatus,[String? sliderTime]){
+  void updateSliderStatus({required bool showStatus,String? sliderTime}){
 
     if(sliderTime!=null){
       dragingSliderTime = sliderTime;
@@ -191,7 +194,7 @@ class PlayerUIModel extends GetxController{
 
                 currentDurationSecond = max(currentDurationSecond-1,0);
                 dragingSliderTime = convertDuration(currentDurationSecond);
-                updateSliderStatus(true,dragingSliderTime);
+                updateSliderStatus(showStatus:true,sliderTime:dragingSliderTime);
 
                 break;
               }
@@ -201,7 +204,7 @@ class PlayerUIModel extends GetxController{
                 currentDurationSecond = min(currentDurationSecond+1,playerData.player.state.duration.inSeconds);
                 dragingSliderTime = convertDuration(currentDurationSecond);
 
-                updateSliderStatus(true,dragingSliderTime);
+                updateSliderStatus(showStatus:true,sliderTime:dragingSliderTime);
 
                 break;
               
@@ -237,7 +240,7 @@ class PlayerUIModel extends GetxController{
               )
             );
             
-            updateSliderStatus(false);
+            updateSliderStatus(showStatus: false);
           }
 
 
@@ -483,6 +486,7 @@ class PlayerUIModel extends GetxController{
         //buffering & loading
 
         playerPlayingStatus.value = false;
+        audioLoadedStatus.value = false;
         //videoBuffingStatus.value = true;
         tempBlurShowFlag.value = false;
       
@@ -491,7 +495,7 @@ class PlayerUIModel extends GetxController{
       case PlayerStatus.playing:{
 
         playerPlayingStatus.value = true;
-        //videoBuffingStatus.value = false;
+        audioLoadedStatus.value = true;
       
         videoLoadedStatus.value = true;
         tempBlurShowFlag.value = false;

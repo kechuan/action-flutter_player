@@ -88,7 +88,7 @@ class VideoGestureDector extends StatelessWidget {
 
             //playerData.updateStatus(playerControlPanel.convertDuration(initalDuration),true);
 
-            playerControlPanel.updateSliderStatus(true,playerControlPanel.convertDuration(initalDuration));
+            playerControlPanel.updateSliderStatus(showStatus:true,sliderTime:playerControlPanel.convertDuration(initalDuration));
 
             print("residual:$residual playerData.durationTime:${playerData.player.state.duration.inSeconds},current:$limitedDurationTime");
 
@@ -106,7 +106,7 @@ class VideoGestureDector extends StatelessWidget {
         //playerControlPanel.sliderDragingStatus.value = false;
         playerData.player.seek(Duration(seconds: initalDuration));
 
-        playerControlPanel.updateSliderStatus(false);
+        playerControlPanel.updateSliderStatus(showStatus: false);
       },
 
       onVerticalDragUpdate: (dragVerticalUpdateDetails) async {

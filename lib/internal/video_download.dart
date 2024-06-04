@@ -2,16 +2,159 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+
 import 'package:flutter_player/internal/hive.dart';
 import 'package:flutter_player/internal/url_request.dart';
 import 'package:flutter_player/model/playerUI_model.dart';
 import 'package:flutter_player/model/video_download_record.dart';
 import 'package:flutter_player/model/video_model.dart';
+
+
 import 'package:get/get.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_player/widget/component/prompt_dialog.dart';
+
+void showDownloadDialog({String? bvid,int? cid,String? title}) async {
+  final playerController = Get.find<VideoModel>();
+
+  if(!playerController.localDownloadTaskQueue.containsKey(playerController.currentPlayingInformation["title"])){
+    
+    if(bvid !=null && cid != null){
+      //如果提供ID了 则应根据提供的ID信息来获取数据 以进行下载
+      //在这期间势必牵扯到Future和网络请求问题
+
+      await Get.dialog<RxMap>(
+
+        FutureBuilder(
+          future: playerController.parsingVideo(
+            orignalUrl: "${SuffixHttpString.baseUrl}${PlayerApi.playerUri}?bvid=$bvid&cid=$cid&high_quality=1&platform=html5&qn=112",
+            dashFlag:true,
+            videoLoadFlag:false,
+            isrcmd: true
+          ),
+          builder: (_,snapshot){
+            
+            switch(snapshot.connectionState){
+
+              case ConnectionState.waiting:{
+                return Dialog(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(26),
+                      color: const Color.fromARGB(231, 85, 83, 83),
+                    ),
+                    height: 400,
+                    width: 400,
+                    child: const Center(
+                      child: Text("request Data..."),
+                    ),
+                  ),
+                );
+              }
+
+              case ConnectionState.done:{
+                return Dialog(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(26),
+                      color: const Color.fromARGB(231, 85, 83, 83),
+                    ),
+                    height: 400,
+                    width: 400,
+                    child: DownloadQualifySelectPanel(isrcmd: true,rcmdTitle: title),
+                  ),
+                );
+              }
+
+              default: return const SizedBox.shrink();
+
+            }
+          
+          }
+        ),
+
+        transitionCurve: Curves.ease,
+        transitionDuration: const Duration(milliseconds: 300)
+          
+            
+        ).then((value){
+          //value的内容是 {"name":index}
+          print(value); 
+
+          if(value!=null){
+            videoDownload(
+              videoTitle:value.keys.first, //name
+              videoUrl:playerController.rcmdDownloadVideoQualityMap.values.elementAt(value.values.first.value),
+              videoSize:playerController.rcmdDownloadQualitySize[value.values.first.value], //size
+              currentAudioUrl:playerController.rcmdDownloadAudioUrl,
+            );
+          }
+
+          else{
+            print("task was existed or canceld");
+          }
+        });
+    }
+
+    else{
+
+      //如果没有主动提供ID 则以当前播放信息进行下载
+        await Get.dialog<RxMap>(
+          Dialog(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(26),
+                color: const Color.fromARGB(231, 85, 83, 83),
+              ),
+              height: 400,
+              width: 400,
+              child: const DownloadQualifySelectPanel(),
+            ),
+          ),
+
+          transitionCurve: Curves.ease,
+          transitionDuration: const Duration(milliseconds: 300)
+            
+        ).then((value){
+          //value的内容是 {"name":index}
+          print(value); 
+
+          if(value!=null){
+            videoDownload(
+              videoTitle:value.keys.first, //name
+              videoUrl:playerController.currentPlayingInformation["videoUrl"],
+              videoSize:playerController.currentPlayingInformation["size"][value.values.first.value], //size
+              currentAudioUrl:playerController.currentPlayingInformation["audioUrl"],
+            );
+          }
+
+          else{
+            print("task was existed");
+          }
+        });
+
+    }
+
+      
+
+  }
+
+  else{
+    //如已存在 弹出toaster 提示
+    Get.snackbar(
+      '下载任务已存在于队列中',
+      '',
+      snackPosition: SnackPosition.BOTTOM,
+      colorText:Colors.white,
+      maxWidth: 300
+    );
+  }
+  
+}
 
 //value 本质就是  {[战地2042]听不清楚该上市: 1} 1 => 画质 画质 本质 -> videoSize 所以传size数据就够了
-void videoDownload(String videoTitle,String videoUrl,double videoSize,[String? currentAudioUrl,int? rangeInformation]) async {
+void videoDownload({required String videoTitle,required String videoUrl,required double videoSize,String? currentAudioUrl,int? rangeInformation}) async {
 
   final playerController = Get.find<VideoModel>();
   final playerControlPanel = Get.find<PlayerUIModel>();
@@ -107,6 +250,7 @@ void videoDownload(String videoTitle,String videoUrl,double videoSize,[String? c
                 int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
                 if(rangeInformation!=null){
+                  //所以需要range拼接更新
                   downloadedRange = count+rangeInformation;
                   newRecordRate = downloadedRange/(videoSize*1024*1024);
                 }
@@ -150,16 +294,15 @@ void videoDownload(String videoTitle,String videoUrl,double videoSize,[String? c
               }
             }),
 
-            
             //音频为隐秘下载 如果真出现了视频下完音频没下完 到时候就显示message在上面吧。。
+            //待处理(如果音频没下载完毕的做法[吃力不讨好])
             currentAudioUrl!=null ?
             HttpApiClient.client.download(
               currentAudioUrl,
               "${StoragePath.downloadPath}${Platform.pathSeparator}$videoTitle.mp3",
               cancelToken: currentCancelToken,
               
-            ).then((value){print("audio complete");})
-            :
+            ).then((value){print("audio complete");}) :
             Future(() => null)
 
           ]

@@ -43,7 +43,7 @@ class MyHive {
     Hive.registerAdapter(VideoDurationRecordAdapter());
     Hive.registerAdapter(VideoDownloadRecordAdapter());
 
-    //疑问:注册了适配器之后 Box那边要怎 么仅靠key Name就能和 adapter联系起来?
+    //疑问:注册了适配器之后 Box那边要怎么仅靠key Name就能和 adapter联系起来?
 
     listDataBase = await Hive.openBox(HiveBoxKey.listDataBase);
     userDataBase = await Hive.openBox(HiveBoxKey.userDataBase);
