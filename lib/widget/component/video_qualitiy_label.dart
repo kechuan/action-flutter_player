@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_player/internal/enum_define.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/internal/url_request.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:flutter_player/model/user_model.dart';
 import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
@@ -31,7 +32,7 @@ class VideoQualitiyLabel extends StatelessWidget {
 
           VideoParams currentPrams = playerController.player.state.videoParams;
 
-          print("codec:${playerController.player.state.tracks.video.last.codec}");
+          Log.logprint("codec:${playerController.player.state.tracks.video.last.codec}");
 
           if(currentPrams.h == null){
             currentVideoResolution = "N/A";
@@ -77,16 +78,16 @@ class VideoQualitiyLabel extends StatelessWidget {
             color: const Color.fromARGB(255, 232, 244, 214),
 
             onOpened: () {
-              print("${playerController.player.state.tracks.video.last.codec}");
+              Log.logprint("${playerController.player.state.tracks.video.last.codec}");
             },
                               
             onSelected: (selectedValue){
 
-              print("selected:$selectedValue");
+              Log.logprint("selected:$selectedValue");
 
               if(playerController.player.state.tracks.video.last.codec != UserModel.configList["encodeSetting"].toString().toLowerCase()){
 
-                print("${playerController.player.state.tracks.video.last.codec} => ${UserModel.configList["encodeSetting"].toString().toLowerCase()}");
+                Log.logprint("${playerController.player.state.tracks.video.last.codec} => ${UserModel.configList["encodeSetting"].toString().toLowerCase()}");
 
                 if(playerController.player.state.tracks.video.last.codec == "h264" && UserModel.configList["encodeSetting"].toString().toLowerCase() == "avc"){
                   playerController.playerHotSwitch(selectedValue);
@@ -101,7 +102,7 @@ class VideoQualitiyLabel extends StatelessWidget {
               }
 
               else{
-                print("hot selected");
+                Log.logprint("hot selected");
                 playerController.playerHotSwitch(selectedValue);
               }
 

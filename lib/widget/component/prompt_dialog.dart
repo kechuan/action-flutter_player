@@ -1,6 +1,7 @@
 
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/model/user_model.dart';
 import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
@@ -80,8 +81,8 @@ class DownloadQualifySelectPanel extends StatelessWidget {
                                         
                                         onPressed: (){
                                           selectedVideoItems.clear();
-                                          //print("size:${qualitySize[index]}");
-                                          //print(qualityMap.values.elementAt(index));
+                                          //Log.logprint("size:${qualitySize[index]}");
+                                          //Log.logprint(qualityMap.values.elementAt(index));
                                           selectedQualifyItem.value = index;
                                         },
                                         child: Text(qualityMap.keys.elementAt(index),style:  TextStyle(color: qualitySize[index] != null ? Colors.white : Colors.grey),)
@@ -138,7 +139,7 @@ class DownloadQualifySelectPanel extends StatelessWidget {
                           title: Text(videoTitle??"",maxLines: 1,overflow: TextOverflow.ellipsis),
                           trailing: Text("${videoSize?.toStringAsFixed(2)}MB",style: const TextStyle(fontSize: 13,color: Colors.black),),
                           onTap: (){
-                            //print(MediaQuery.sizeOf(context));
+                            //Log.logprint(MediaQuery.sizeOf(context));
 
                             if(qualitySize[selectedQualifyItem.value]!=null){
 
@@ -153,7 +154,7 @@ class DownloadQualifySelectPanel extends StatelessWidget {
 
                             }
 
-                            print("wrong. not add");
+                            Log.logprint("wrong. not add");
 
                             
                               
@@ -198,7 +199,7 @@ class DownloadQualifySelectPanel extends StatelessWidget {
 
                         double? videoSize;
 
-                        if((qualitySize as List).isNotEmpty){
+                        if(qualitySize.isNotEmpty){
                           videoSize = qualitySize[selectedQualifyItem.value];
                         }
 

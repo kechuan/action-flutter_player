@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter_player/internal/hive.dart';
+import 'package:flutter_player/internal/log.dart';
 
 import 'package:flutter_player/internal/url_request.dart';
 import 'package:get/get.dart';
@@ -96,30 +97,30 @@ class UserModel{
 
     for(int configIndex = 0;configIndex<requiredConfig.length;configIndex++){
 
-      print("${configIndex}/${requiredConfig.length-1}:${requiredConfig[configIndex]}");
+      Log.logprint("$configIndex/${requiredConfig.length-1}:${requiredConfig[configIndex]}");
 
       UserHive.getUserConfig(requiredConfig[configIndex]).then((configValue){
 
         if(configValue != null && configValue.isNotEmpty){
-          print("cookies content:$configValue");
+          Log.logprint("cookies content:$configValue");
           if(requiredConfig[configIndex] == 'cookie'){
             configList.update('cookie', (value) => configValue);
 
             //风险性 但是便利
             ClientCookies.sessData = configValue;
-            print("cookies exists.");
+            Log.logprint("cookies exists.");
           }
         }
 
         else{
-          print("${requiredConfig[configIndex]} set value");
+          Log.logprint("${requiredConfig[configIndex]} set value");
           UserHive.setUserConfig(requiredConfig[configIndex],defaultValue[requiredConfig[configIndex]]);
         }
 
       });
     }
 
-    print("user config inited");
+    Log.logprint("user config inited");
     return;
 
   }
@@ -130,7 +131,7 @@ class UserModel{
     
     //https://api.bilibili.com/x/space/myinfo
 
-    print("requestUri:$requestUri data: $sessdata");
+    Log.logprint("requestUri:$requestUri data: $sessdata");
 
     verifingCookie.value = true;
 
@@ -147,11 +148,11 @@ class UserModel{
         )
       ).then((response){
 
-        print("response:$response");
+        Log.logprint("response:$response");
 
         switch(response.data['code']){
           case -101:{
-            print("${response.data['message']}");
+            Log.logprint("${response.data['message']}");
             cookiesState = "未生效 将使用原有配置";
             
             break;
@@ -161,7 +162,7 @@ class UserModel{
             UserHive.setUserConfig('cookie', sessdata);
             
             cookiesState = "已生效";
-            print("cookie状态已更新");
+            Log.logprint("cookie状态已更新");
 
               ClientCookies.sessData = sessdata;
               HttpApiClient.broswerHeader.update("cookie", (value) => "SESSDATA=$sessdata");

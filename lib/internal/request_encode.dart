@@ -3,9 +3,10 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_player/internal/enum_define.dart';
+import 'package:flutter_player/internal/log.dart';
 
 import 'package:flutter_player/internal/url_request.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
@@ -33,7 +34,7 @@ String parseMixinKey(String imgKey,String subKey){
         if(currentIndex == 13) break;
     }
 
-    print("rawWbiKey:$mixinKey");
+    Log.logprint("rawWbiKey:$mixinKey");
     return mixinKey;
 }
 
@@ -47,7 +48,7 @@ String encodeHTTPRequest(String orignalRequest){
     String encodeRequest = "$orignalRequest&wts=$currentTimeStamp${parseMixinKey(imgKey,subKey)}";
 
     w_rid = md5.convert(utf8.encode(encodeRequest)).toString();
-    print("w_rid:$w_rid");
+    Log.logprint("w_rid:$w_rid");
 
 
     finalRequest = "$orignalRequest&w_rid=$w_rid&wts=$currentTimeStamp";
@@ -92,7 +93,7 @@ void searchRequestResponse(String searchContent){
               ).then((response){
                 if(response.data["code"]==0){
 
-                  print("stat response:${response.data["data"]["cid"]}");
+                  Log.logprint("stat response:${response.data["data"]["cid"]}");
 
                   if(currentVideo["duration"] is String){
 
@@ -146,7 +147,7 @@ void searchRequestResponse(String searchContent){
 
       if(RequestRegExp.videoIDExp.hasMatch(searchContent)){
 
-        print("jump to:$searchContent");
+        Log.logprint("jump to:$searchContent");
 
         Map<String,String> params = {};
 
@@ -209,7 +210,7 @@ void searchRequestResponse(String searchContent){
 
              //[待通知]
             else{
-              print("找不到该视频号:$searchContent,可能已被删除");
+              Log.logprint("找不到该视频号:$searchContent,可能已被删除");
             }
 
         });
@@ -217,7 +218,7 @@ void searchRequestResponse(String searchContent){
       }
 
       else{
-        print("找不到该视频号:$searchContent,请确认输入格式是否有误");
+        Log.logprint("找不到该视频号:$searchContent,请确认输入格式是否有误");
       }
 
         
@@ -288,7 +289,7 @@ final playerControlPanel = Get.find<PlayerUIModel>();
 
   if(videoID!=null){
 
-    print("videoID:$videoID");
+    Log.logprint("videoID:$videoID");
 
     playerController.onlineRelatedList.clear();
 
@@ -394,11 +395,11 @@ void backupliveRoomResponse({required String orignalRequest,int? qn}) async {
           }
 
           else{
-            print("cid:$orignalRequest,not found!");
+            Log.logprint("cid:$orignalRequest,not found!");
           }
 
 
-          print("currentQualify.length :${accept_qualityList.length} currentMap:${playerController.currentPlayingInformation['qualityMap']}");
+          Log.logprint("currentQualify.length :${accept_qualityList.length} currentMap:${playerController.currentPlayingInformation['qualityMap']}");
 
         }
       );
@@ -460,7 +461,7 @@ void liveRoomResponse({required String orignalRequest,int? qn}) async {
       ).then(
         (response){
 
-          print("response:${response}:");
+          Log.logprint("response:$response:");
 
           if(response.data["code"] == 0){
 
@@ -476,7 +477,7 @@ void liveRoomResponse({required String orignalRequest,int? qn}) async {
 
               accept_qualityList = codec_stream["accept_qn"];
 
-              print("3 Part: host > ${codec_stream['url_info'][0]['host']} api > ${codec_stream["base_url"]} params > ${codec_stream["url_info"][0]["extra"]}");
+              Log.logprint("3 Part: host > ${codec_stream['url_info'][0]['host']} api > ${codec_stream["base_url"]} params > ${codec_stream["url_info"][0]["extra"]}");
 
               playerController.playerVideoLoad(
                 video: Media(
@@ -498,7 +499,7 @@ void liveRoomResponse({required String orignalRequest,int? qn}) async {
           }
 
           else{
-            print("cid:$orignalRequest,not found!");
+            Log.logprint("cid:$orignalRequest,not found!");
           }
           
 
@@ -507,7 +508,7 @@ void liveRoomResponse({required String orignalRequest,int? qn}) async {
 
     if(!isAccessSucc){
 
-      print("not contain HEVC source.change to AVC source");
+      Log.logprint("not contain HEVC source.change to AVC source");
 
       await HttpApiClient.client.get(
         VideoCatalog.liveRoom,
@@ -522,7 +523,7 @@ void liveRoomResponse({required String orignalRequest,int? qn}) async {
       ).then(
         (response){
 
-          print("response:${response}:");
+          Log.logprint("response:$response:");
 
           if(response.data["code"] == 0){
 
@@ -538,7 +539,7 @@ void liveRoomResponse({required String orignalRequest,int? qn}) async {
 
               accept_qualityList = codec_stream["accept_qn"];
 
-              print("3 Part: host > ${codec_stream['url_info'][0]['host']} api > ${codec_stream["base_url"]} params > ${codec_stream["url_info"][0]["extra"]}");
+              Log.logprint("3 Part: host > ${codec_stream['url_info'][0]['host']} api > ${codec_stream["base_url"]} params > ${codec_stream["url_info"][0]["extra"]}");
 
               playerController.playerVideoLoad(
                 video: Media(
@@ -558,7 +559,7 @@ void liveRoomResponse({required String orignalRequest,int? qn}) async {
           }
 
           else{
-            print("cid:$orignalRequest,not found!");
+            Log.logprint("cid:$orignalRequest,not found!");
           }
 
         }
@@ -595,6 +596,6 @@ void liveRoomResponse({required String orignalRequest,int? qn}) async {
 
     }
 
-    print("currentQualify.length :${accept_qualityList.length} currentMap:${playerController.currentPlayingInformation['qualityMap']}");
+    Log.logprint("currentQualify.length :${accept_qualityList.length} currentMap:${playerController.currentPlayingInformation['qualityMap']}");
 
 }

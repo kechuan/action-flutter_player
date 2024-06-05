@@ -4,15 +4,16 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_player/internal/log.dart';
 
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 //import 'package:flutter_player/model/user_model.dart';
 import 'package:flutter_player/model/video_model.dart'; 
 
 import 'package:flutter_player/widget/component/player_completed_panel.dart';
-import 'package:flutter_player/widget/controlPanel.dart';
-import 'package:flutter_player/widget/drawVideoSelectPanel.dart';
-import 'package:flutter_player/widget/videoGestureDecetor.dart';
+import 'package:flutter_player/widget/control_panel.dart';
+import 'package:flutter_player/widget/draw_video_select_panel.dart';
+import 'package:flutter_player/widget/video_gesture_decetor.dart';
 
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -24,12 +25,12 @@ class VideoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    print("videoPage build");
+    Log.logprint("videoPage build");
 
     final VideoModel playerData = Get.find<VideoModel>();
     final PlayerUIModel playerControlPanel = Get.find<PlayerUIModel>();
 
-    print("videoPage -> VideoModel hashCode:${playerData.hashCode}");
+    Log.logprint("videoPage -> VideoModel hashCode:${playerData.hashCode}");
 
     playerData.playerCompletedStatusListen();
 
@@ -96,7 +97,7 @@ class VideoPage extends StatelessWidget {
                             builder:(_, snapshot) {
                               return Obx(() => Visibility(
 
-                                visible:playerData.player.state.buffering || !playerControlPanel.audioLoadedStatus.value,
+                                visible:playerData.player.state.buffering || (!playerControlPanel.audioLoadedStatus.value && playerControlPanel.videoLoadedStatus.value),
                                 maintainState:playerData.player.state.buffering, //maintain 的设立与否 大概是display: none 与 opacity(1) 上的区别吧
                                 child: Container(
                                   
@@ -115,7 +116,7 @@ class VideoPage extends StatelessWidget {
                                     //  stream: playerData.player.stream.buffer,
                                     //  builder: (context, snapshot) {
                 
-                                    //    //print("${
+                                    //    //Log.logprint("${
                                     //    //  playerData.player.state.buffer.inSeconds - playerData.player.state.position.inSeconds
                                     //    //}");
                 
@@ -204,12 +205,12 @@ class VideoPage extends StatelessWidget {
                           onEnd:() {
 
                             if(!playerControlPanel.panelActiveStatus){
-                              print("onEnd Close trigged");
+                              Log.logprint("onEnd Close trigged");
                               playerControlPanel.panelActiveAnimated = false;
                             }
 
                             else{
-                              print("onEnd Open trigged");
+                              Log.logprint("onEnd Open trigged");
                               playerControlPanel.panelActiveAnimated = true;
                             }
 

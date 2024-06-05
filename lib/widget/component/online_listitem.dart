@@ -3,8 +3,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/internal/video_download.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 
 import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
@@ -167,6 +168,7 @@ class OnlineVideoListItem extends StatelessWidget {
                                         child: const Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
+                                            Icon(Icons.download),
                                             Text("下载")
                                           ],),
 
@@ -180,7 +182,7 @@ class OnlineVideoListItem extends StatelessWidget {
                                   ),
                             
                                   onSelected: (index){
-                                    print(index);
+                                    Log.logprint(index);
                                   },
                                   
                             

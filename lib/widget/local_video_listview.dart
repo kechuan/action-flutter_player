@@ -6,16 +6,16 @@ import 'dart:math';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:flutter_player/internal/convert_task_queue_information.dart';
 import 'package:flutter_player/internal/enum_define.dart';
 import 'package:flutter_player/internal/file_pick.dart';
 
 import 'package:flutter_player/internal/hive.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/internal/url_request.dart';
 import 'package:flutter_player/internal/video_download.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 
 import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
@@ -37,7 +37,7 @@ class LocalVideoListView extends StatelessWidget {
           var currentFileInformation = data.files.elementAtOrNull(currentIndex);
       
           if(videoFliter.hasMatch(currentFileInformation!.name)){
-            print(currentFileInformation.name);
+            Log.logprint(currentFileInformation.name);
       
             playerController.localPlayList.add(
               {
@@ -72,7 +72,7 @@ class LocalVideoListView extends StatelessWidget {
 
                         IconButton(
                           onPressed: (){
-                            print("toggle collapse of expaned");
+                            Log.logprint("toggle collapse of expaned");
                             playerControlPanel.localPlayListExpanded.value = !playerControlPanel.localPlayListExpanded.value;
                             playerControlPanel.updateLocalList();
                           }, 
@@ -111,7 +111,7 @@ class LocalVideoListView extends StatelessWidget {
                         IconButton(
                           padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 0),
                           onPressed: (){
-                            print("current play mode: seq");
+                            Log.logprint("current play mode: seq");
                           },
                           icon: const Icon(Icons.keyboard_tab,color: Colors.white,)
                         ),
@@ -155,7 +155,7 @@ class LocalVideoListView extends StatelessWidget {
                                 newIndex -= 1; //增长时 将值-1
                               }
                           
-                              print("$oldIndex => $newIndex");
+                              Log.logprint("$oldIndex => $newIndex");
                           
                               final Map currentVideoInformation = playerController.localPlayList.removeAt(oldIndex);
                               playerController.localPlayList.insert(newIndex, currentVideoInformation);  
@@ -163,12 +163,12 @@ class LocalVideoListView extends StatelessWidget {
                               //有播放时 跟着正在播放的Index走
                               if(playerController.currentPlayingInformation["title"] == playerController.localPlayList[newIndex]["title"]){
                                 playerController.currentPlayingLocalVideoIndex = newIndex+1;
-                                print("current Playing Index changed:$newIndex,next play will: ${playerController.localPlayList[max(newIndex+1,playerController.localPlayList.length-1)]["title"]}");
+                                Log.logprint("current Playing Index changed:$newIndex,next play will: ${playerController.localPlayList[max(newIndex+1,playerController.localPlayList.length-1)]["title"]}");
                               }
                           
                               //否则按照初始目录从头走
                               else if(playerController.currentPlayingLocalVideoIndex == 1){
-                                print("next play will: ${playerController.localPlayList[1]}");
+                                Log.logprint("next play will: ${playerController.localPlayList[1]}");
                               }
                           
                             },
@@ -256,7 +256,7 @@ class LocalVideoListView extends StatelessWidget {
                                                       
                                                       
                                   onLongPress: (){
-                                    print("playList long Pressed");
+                                    Log.logprint("playList long Pressed");
                                     playerControlPanel.toggleLocalPlayListMode();
                                   },
                                                   
@@ -282,7 +282,7 @@ class LocalVideoListView extends StatelessWidget {
                   
                     onAcceptWithDetails: (details) {
                       // onWillAcceptWithDetails -> onAcceptWithDetails
-                      print("detail:${details.data}");
+                      Log.logprint("detail:${details.data}");
                       playerController.localPlayList.add(details.data);
                   
                     },
@@ -300,7 +300,7 @@ class LocalVideoListView extends StatelessWidget {
 
                             IconButton(
                               onPressed: (){
-                                print("toggle collapse of expaned");
+                                Log.logprint("toggle collapse of expaned");
                                 playerControlPanel.localDownloadListExpanded.value = !playerControlPanel.localDownloadListExpanded.value;
                                 playerControlPanel.updateDownloadList();
                               }, 
@@ -392,7 +392,7 @@ class LocalVideoListView extends StatelessWidget {
                                   } :
                                   null,
                                 onDragStarted:() {
-                                  print("dragStrart");
+                                  Log.logprint("dragStrart");
                                 },
                                 child: ListTile(
                                   title: Row(
@@ -424,7 +424,7 @@ class LocalVideoListView extends StatelessWidget {
                                   //一是来自内部的widget的Drag识别 二是来自文件夹内部的Drag识别。
                                   onTap: (){
                                                               
-                                    print("clicked");
+                                    Log.logprint("clicked");
 
                                     //删除模式
                                     if(playerControlPanel.isDownloadTaskDeleteMode){
@@ -437,7 +437,7 @@ class LocalVideoListView extends StatelessWidget {
                                       }
 
                                       playerControlPanel.updateDownloadList();
-                                      print("${playerController.localDeleteList}");
+                                      Log.logprint("${playerController.localDeleteList}");
 
                                     }
 
@@ -489,7 +489,7 @@ class LocalVideoListView extends StatelessWidget {
                                   },
 
                                   onLongPress: (){
-                                    print("downloadList long Pressed");
+                                    Log.logprint("downloadList long Pressed");
                                     playerControlPanel.toggleDownloadTaskMode();
                                   },
 
@@ -588,17 +588,17 @@ class LocalVideoListView extends StatelessWidget {
                           );    
                         });
 
-                    print("deleteAction:$deleteAction");
+                    Log.logprint("deleteAction:$deleteAction");
 
                       if(deleteAction!=null&&deleteAction){
                         //Delete Mode
                         if(playerControlPanel.isLocalPlayListDeleteMode){
 
-                          print(playerController.localPlayList);
+                          Log.logprint(playerController.localPlayList);
 
                           if(playerController.localDeleteList.isNotEmpty){
                             for(String deleteName in playerController.localDeleteList){
-                              print("deleteName:$deleteName");
+                              Log.logprint("deleteName:$deleteName");
                               
                               for(int localPlayIndex = 0;localPlayIndex<playerController.localPlayList.length;localPlayIndex++){
                                 if(playerController.localPlayList[localPlayIndex]["title"] == deleteName){
@@ -617,7 +617,7 @@ class LocalVideoListView extends StatelessWidget {
 
                           if(playerController.localDeleteList.isNotEmpty){
                             for(String deleteName in playerController.localDeleteList){
-                              print("deleteName:$deleteName");
+                              Log.logprint("deleteName:$deleteName");
                               playerController.localDownloadTaskQueue.remove(deleteName);
                             }
                           }
@@ -662,7 +662,7 @@ class LocalVideoListView extends StatelessWidget {
 
                       if(result!=null){
 
-                        print(result);
+                        Log.logprint(result);
                         List<File> files = result.paths.map((path) => File(path!)).toList();
                         
                           for(var currentFile in files){
@@ -691,7 +691,7 @@ class LocalVideoListView extends StatelessWidget {
                     id: "localListMode",
                     init: playerControlPanel,
                     builder: (context) {
-                      print("localListModeUpdate");
+                      Log.logprint("localListModeUpdate");
                       return playerControlPanel.isDownloadTaskDeleteMode || playerControlPanel.isLocalPlayListDeleteMode? const Icon(Icons.delete) : const Icon(Icons.add);
                     }
                   ),

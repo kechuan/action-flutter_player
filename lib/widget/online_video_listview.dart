@@ -5,11 +5,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_player/internal/enum_define.dart';
 import 'package:flutter_player/internal/hive.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/internal/request_encode.dart';
 import 'package:flutter_player/internal/show_textfield_overlay.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:flutter_player/model/video_model.dart';
-import 'package:flutter_player/widget/UnVisibleResponse.dart';
+import 'package:flutter_player/widget/unvisible_response.dart';
 import 'package:flutter_player/widget/component/online_listItem.dart';
 import 'package:get/get.dart';
 
@@ -27,10 +28,10 @@ class OnlineVideoListview extends StatelessWidget {
 
     //if(Platform.isAndroid){
     //  searchFieldFocus.addListener(() {
-    //    print("searchFieldFocus trigged");
-    //    print("text:${searchFieldController.value.text}");
+    //    Log.logprint("searchFieldFocus trigged");
+    //    Log.logprint("text:${searchFieldController.value.text}");
     //    if(searchFieldController.value.text.isNotEmpty && !searchFieldFocus.hasFocus){
-    //      print("Overlay search");
+    //      Log.logprint("Overlay search");
     //      searchRequestResponse(searchFieldController.value.text);
     //    }
     //  });
@@ -94,7 +95,7 @@ class OnlineVideoListview extends StatelessWidget {
                                               
                             onSelected: (selectedValue){
                               playerControlPanel.searchType.value = selectedValue;
-                              print("selected:$selectedValue");
+                              Log.logprint("selected:$selectedValue");
                               
                             },
                                               
@@ -168,10 +169,10 @@ class OnlineVideoListview extends StatelessWidget {
                               
                               
                               onEditingComplete: () {
-                                print("editing completed trigged");
+                                Log.logprint("editing completed trigged");
                                 playerControlPanel.searchingFocus.value = false;
             
-                                print("searchContent:${searchFieldController.value.text}");
+                                Log.logprint("searchContent:${searchFieldController.value.text}");
                                 searchRequestResponse(searchFieldController.value.text);
             
                               },
@@ -200,7 +201,7 @@ class OnlineVideoListview extends StatelessWidget {
             id: "onlineList",
             init: playerControlPanel,
             builder: (controller) {
-              print("playerController.onlinePlayList.length:${playerController.onlinePlayList.length}");
+              Log.logprint("playerController.onlinePlayList.length:${playerController.onlinePlayList.length}");
               
               return Expanded(
                 child: 
@@ -234,8 +235,8 @@ class OnlineVideoListview extends StatelessWidget {
                       
                         onTap: () async {
                           
-                          print("try parsing ${currentVideoInformation["title"]},bvid:${currentVideoInformation["bvid"]},cid:${currentVideoInformation["cid"]}}");
-                          //print("it hited, uri: ${currentVideoInformation["uri"]}");
+                          Log.logprint("try parsing ${currentVideoInformation["title"]},bvid:${currentVideoInformation["bvid"]},cid:${currentVideoInformation["cid"]}}");
+                          //Log.logprint("it hited, uri: ${currentVideoInformation["uri"]}");
                           //此时可以在player中间显示loading... 
 
                           if(playerControlPanel.currentPlayingVideoType.value == VideoType.localVideo.index){

@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/internal/request_encode.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:get/get.dart';
 
 class TextFieldOverlay{
@@ -31,7 +32,7 @@ class TextFieldOverlay{
 
     final playerControlPanel = Get.find<PlayerUIModel>();
 
-    print("overlay build");
+    Log.logprint("overlay build");
 
 
     OverlayState overlayState = Overlay.of(context);
@@ -39,13 +40,13 @@ class TextFieldOverlay{
       playerControlPanel.currentOverlayEntry = OverlayEntry(
         
         builder: (context){
-          print("Media systemGestureInsets:${MediaQuery.systemGestureInsetsOf(context).right}");
+          Log.logprint("Media systemGestureInsets:${MediaQuery.systemGestureInsetsOf(context).right}");
 
           if(outerTextEditingController !=null && outerFocusNode != null){
 
             outerFocusNode!.addListener(() {
               if(!outerFocusNode!.hasFocus){
-                print("outerFocusNode unfocus trigged");
+                Log.logprint("outerFocusNode unfocus trigged");
                 overlayFocus.requestFocus();
               }
             });
@@ -109,7 +110,7 @@ class TextFieldOverlay{
           
                         if(outerFocusNode != null){
                           
-                          print("outerFocusNode remove");
+                          Log.logprint("outerFocusNode remove");
           
                           if(searchType!=null && searchType == true){
                             searchRequestResponse(overlayController.value.text);

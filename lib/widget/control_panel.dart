@@ -4,15 +4,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_player/internal/enum_define.dart';
 import 'package:flutter_player/internal/hive.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/internal/video_download.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 
 import 'package:get/get.dart';
 
-import 'package:flutter_player/widget/UnVisibleResponse.dart';
+import 'package:flutter_player/widget/unvisible_response.dart';
 import 'package:flutter_player/widget/component/progress_slider.dart';
 import 'package:flutter_player/widget/component/video_qualitiy_label.dart';
-import 'package:flutter_player/widget/settingPanel.dart';
+import 'package:flutter_player/widget/setting_panel.dart';
 import 'package:flutter_player/model/video_model.dart';
 
 
@@ -36,7 +37,7 @@ class VideoControlPanel extends StatelessWidget {
         playerControlPanel.panelActiveStatus = !playerControlPanel.panelActiveStatus;
         playerControlPanel.toggleControlPanelStatus();
 
-        print("panelStatus: status:${playerControlPanel.panelActiveStatus}, animated:${playerControlPanel.panelActiveAnimated}");
+        Log.logprint("panelStatus: status:${playerControlPanel.panelActiveStatus}, animated:${playerControlPanel.panelActiveAnimated}");
 
       },
       
@@ -114,7 +115,7 @@ class VideoControlPanel extends StatelessWidget {
 
             IconButton(
               onPressed: (){
-                print("trigged endDrawer open");
+                Log.logprint("trigged endDrawer open");
                 playerControlPanel.toggleDrawVideoSelectPanel();
               },
               icon: const Icon(Icons.more_vert_outlined,size: 26,color: Colors.white)
@@ -156,7 +157,7 @@ class VideoControlPanel extends StatelessWidget {
                               
                           IconButton(
                             onPressed: (){
-                              print('Panel is locked!');
+                              Log.logprint('Panel is locked!');
                             }, 
                             icon: const Icon(Icons.lock_open,color: Colors.white)
                           ),
@@ -251,10 +252,10 @@ class VideoControlPanel extends StatelessWidget {
                               }
                   
                               else{
-                                print("video was not loaded");
+                                Log.logprint("video was not loaded");
                               }
                   
-                              print("playing: ${playerControlPanel.playerPlayingStatus.value}, inited: ${playerController.playerinitalFlag}");
+                              Log.logprint("playing: ${playerControlPanel.playerPlayingStatus.value}, inited: ${playerController.playerinitalFlag}");
                                   
                             }, 
                             icon: playerControlPanel.videoLoadedStatus.value ?
@@ -391,7 +392,7 @@ class VideoControlPanel extends StatelessWidget {
                               builder: (_,snapshot){
                                 return IconButton(
                                   onPressed: (){
-                                    print("current volume status: ${playerController.player.state.volume}");
+                                    Log.logprint("current volume status: ${playerController.player.state.volume}");
                         
                                       if(playerController.isMuted){
                                         playerController.player.setVolume(playerController.videoVolume.toDouble());

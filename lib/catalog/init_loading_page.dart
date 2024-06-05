@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/model/user_model.dart';
 import 'package:get/get.dart';
 
@@ -20,7 +21,7 @@ class FutureWaitingPage extends StatelessWidget {
 
         switch(snapshot.connectionState){
           case ConnectionState.waiting: {
-            print("waiting:${snapshot.data}");
+            Log.logprint("waiting:${snapshot.data}");
 
             return const Scaffold(
               body: Center(
@@ -38,7 +39,7 @@ class FutureWaitingPage extends StatelessWidget {
           }
 
           case ConnectionState.done:{
-            print("done:${snapshot.data}");
+            Log.logprint("done:${snapshot.data}");
 
             return const Scaffold(
               body: Center(

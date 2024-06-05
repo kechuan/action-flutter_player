@@ -4,7 +4,7 @@
 			"path": "lib/widget/videoGestureDecetor.dart",
 			"bookmarks": [
 				{
-					"line": 116,
+					"line": 117,
 					"column": 62,
 					"label": "视频手势检测"
 				}
@@ -14,12 +14,12 @@
 			"path": "lib/model/video_model.dart",
 			"bookmarks": [
 				{
-					"line": 68,
+					"line": 69,
 					"column": 0,
 					"label": "Model——Video"
 				},
 				{
-					"line": 436,
+					"line": 437,
 					"column": 1,
 					"label": ""
 				}
@@ -29,7 +29,7 @@
 			"path": "lib/widget/component/player_completed_panel.dart",
 			"bookmarks": [
 				{
-					"line": 43,
+					"line": 44,
 					"column": 27,
 					"label": "播放完毕的页面展示"
 				}
@@ -39,39 +39,39 @@
 			"path": "lib/widget/component/related_listitem.dart",
 			"bookmarks": [
 				{
-					"line": 14,
+					"line": 15,
 					"column": 20,
 					"label": "相关视频推荐Item"
 				}
 			]
 		},
 		{
-			"path": "lib/widget/settingPanel.dart",
+			"path": "lib/widget/setting_panel.dart",
 			"bookmarks": [
 				{
-					"line": 219,
+					"line": 220,
 					"column": 0,
 					"label": "设置面板"
 				}
 			]
 		},
 		{
-			"path": "lib/widget/controlPanel.dart",
+			"path": "lib/widget/control_panel.dart",
 			"bookmarks": [
 				{
-					"line": 17,
+					"line": 18,
 					"column": 0,
 					"label": "视频控制面板"
 				},
 				{
-					"line": 94,
+					"line": 95,
 					"column": 17,
 					"label": "视频控制面板——下载"
 				}
 			]
 		},
 		{
-			"path": "lib/widget/localVideoListview.dart",
+			"path": "lib/widget/local_video_listview.dart",
 			"bookmarks": [
 				{
 					"line": 221,
@@ -81,10 +81,10 @@
 			]
 		},
 		{
-			"path": "lib/widget/onlineVideoListview.dart",
+			"path": "lib/widget/online_video_listview.dart",
 			"bookmarks": [
 				{
-					"line": 232,
+					"line": 233,
 					"column": 24,
 					"label": "onTap——在线视频载入"
 				}
@@ -94,7 +94,7 @@
 			"path": "lib/widget/component/video_qualitiy_label.dart",
 			"bookmarks": [
 				{
-					"line": 72,
+					"line": 73,
 					"column": 40,
 					"label": "清晰度Label"
 				}
@@ -104,14 +104,14 @@
 			"path": "lib/model/user_model.dart",
 			"bookmarks": [
 				{
-					"line": 49,
+					"line": 50,
 					"column": 0,
 					"label": "Model——Setting"
 				}
 			]
 		},
 		{
-			"path": "lib/model/playerUi_model.dart",
+			"path": "lib/model/player_ui_model.dart",
 			"bookmarks": [
 				{
 					"line": 66,

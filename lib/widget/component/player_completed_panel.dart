@@ -7,12 +7,13 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_player/internal/enum_define.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/internal/request_encode.dart';
 import 'package:flutter_player/internal/url_request.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 
 import 'package:flutter_player/model/video_model.dart';
-import 'package:flutter_player/widget/UnVisibleResponse.dart';
+import 'package:flutter_player/widget/unvisible_response.dart';
 import 'package:flutter_player/widget/component/related_listitem.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
@@ -28,7 +29,7 @@ class PlayerCompletedPanel extends StatelessWidget {
 
     relatedVideoResponse(playerController.currentPlayingInformation["bvid"]);
 
-    print("TimeStamp: ${DateTime.now().millisecondsSinceEpoch} completedPanel build");
+    Log.logprint("TimeStamp: ${DateTime.now().millisecondsSinceEpoch} completedPanel build");
 
     return UnVisibleResponse(
       onTap: (){
@@ -60,7 +61,7 @@ class PlayerCompletedPanel extends StatelessWidget {
                     
                     onTap: (){
 
-                      //print("replay it video:${playerController.currentPlayingInformation["videoUrl"]},audio:${playerController.currentPlayingInformation["audioUrl"]}");
+                      //Log.logprint("replay it video:${playerController.currentPlayingInformation["videoUrl"]},audio:${playerController.currentPlayingInformation["audioUrl"]}");
 
                       playerController.playerVideoLoad(
                        video: Media(
@@ -149,7 +150,7 @@ class PlayerCompletedPanel extends StatelessWidget {
                                 
                           return UnVisibleResponse(
                         onTap: (){
-                          print("click $index:$currentRelatedVideoInformation");
+                          Log.logprint("click $index:$currentRelatedVideoInformation");
 
                           //[待封装]
 

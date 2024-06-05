@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_player/internal/enum_define.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
 
@@ -82,7 +83,7 @@ class PlayerUIModel extends GetxController{
       if(videoPageContext!.mounted){
 
         Navigator.of(videoPageContext!).pop(); 
-        print("pop executed:${DateTime.timestamp()}");
+        Log.logprint("pop executed:${DateTime.timestamp()}");
 
         togglePlayerUIStatus(PlayerStatus.indle);
 
@@ -161,7 +162,7 @@ class PlayerUIModel extends GetxController{
 
 
             default: {
-              print(event.logicalKey);
+              Log.logprint(event.logicalKey);
             }
 
           }
@@ -216,7 +217,7 @@ class PlayerUIModel extends GetxController{
               //} 
 
               default: {
-                print(event.logicalKey);
+                Log.logprint(event.logicalKey);
 
                 return false;
               }
@@ -230,7 +231,7 @@ class PlayerUIModel extends GetxController{
         else{
 
           //KeyUpEvent
-          print("key up trigged:${event.logicalKey}");
+          Log.logprint("key up trigged:${event.logicalKey}");
 
           if(event.logicalKey == LogicalKeyboardKey.arrowLeft || event.logicalKey == LogicalKeyboardKey.arrowRight){
               
@@ -260,7 +261,7 @@ class PlayerUIModel extends GetxController{
 
             case LogicalKeyboardKey.escape:{
 
-              print("'escape' trigged");
+              Log.logprint("'escape' trigged");
               //disposePage();
               
               playerData.disposePlayer();
@@ -271,7 +272,7 @@ class PlayerUIModel extends GetxController{
             }
 
             case LogicalKeyboardKey.keyL:{
-              print("'List open' trigged");
+              Log.logprint("'List open' trigged");
               toggleDrawVideoSelectPanel();
                          
             }
@@ -289,7 +290,7 @@ class PlayerUIModel extends GetxController{
     if(videoControlPanelContext!=null){
       if(videoControlPanelContext!.mounted){
         if(Scaffold.of(videoControlPanelContext!).isEndDrawerOpen){
-          print("close it");
+          Log.logprint("close it");
           Scaffold.of(videoControlPanelContext!).closeEndDrawer(); 
         }
         
@@ -359,7 +360,7 @@ class PlayerUIModel extends GetxController{
   }
 
   void hidePanelTimer(){
-    print("trigged panel");
+    Log.logprint("trigged panel");
 
     if(!panelActiveStatus) return;
 
@@ -370,7 +371,7 @@ class PlayerUIModel extends GetxController{
     delayHidePanelTimer = Timer(const Duration(seconds: 5),(){ //原本为5s debug测试直接屏蔽这段
       panelActiveStatus = false;
       toggleControlPanelStatus();
-      print("Panel was hidden by Timer");
+      Log.logprint("Panel was hidden by Timer");
     });
     
   }
@@ -426,7 +427,7 @@ class PlayerUIModel extends GetxController{
 
       await playerData.player.playOrPause();
 
-      //print("total Value update:${totalVideoProcess.value}");
+      //Log.logprint("total Value update:${totalVideoProcess.value}");
       //向Model汇报进度.
     }
   }

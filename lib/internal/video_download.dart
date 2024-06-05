@@ -4,8 +4,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import 'package:flutter_player/internal/hive.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/internal/url_request.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:flutter_player/model/video_download_record.dart';
 import 'package:flutter_player/model/video_model.dart';
 
@@ -78,21 +79,21 @@ void showDownloadDialog({String? bvid,int? cid,String? title}) async {
         transitionDuration: const Duration(milliseconds: 300)
           
             
-        ).then((value){
-          //value的内容是 {"name":index}
-          print(value); 
+        ).then((resultMap){
+          //resultMap的内容是 {"name":index}
+          //Log.logprint(resultMap); 
 
-          if(value!=null){
+          if(resultMap!=null){
             videoDownload(
-              videoTitle:value.keys.first, //name
-              videoUrl:playerController.rcmdDownloadVideoQualityMap.values.elementAt(value.values.first.value),
-              videoSize:playerController.rcmdDownloadQualitySize[value.values.first.value], //size
+              videoTitle:resultMap.keys.first, //name
+              videoUrl:playerController.rcmdDownloadVideoQualityMap.values.elementAt(resultMap.values.first.value),
+              videoSize:playerController.rcmdDownloadQualitySize[resultMap.values.first.value], //size
               currentAudioUrl:playerController.rcmdDownloadAudioUrl,
             );
           }
 
           else{
-            print("task was existed or canceld");
+            Log.logprint("task was existed or canceld");
           }
         });
     }
@@ -118,7 +119,7 @@ void showDownloadDialog({String? bvid,int? cid,String? title}) async {
             
         ).then((value){
           //value的内容是 {"name":index}
-          print(value); 
+          Log.logprint(value); 
 
           if(value!=null){
             videoDownload(
@@ -130,7 +131,7 @@ void showDownloadDialog({String? bvid,int? cid,String? title}) async {
           }
 
           else{
-            print("task was existed");
+            Log.logprint("task was existed");
           }
         });
 
@@ -164,7 +165,7 @@ void videoDownload({required String videoTitle,required String videoUrl,required
     double recordRate = 0;
     double newRecordRate = 0;
 
-    print("key:$videoTitle,size:$videoSize");
+    Log.logprint("key:$videoTitle,size:$videoSize");
 
     int basicTimer = DateTime.now().millisecondsSinceEpoch;
 
@@ -174,7 +175,7 @@ void videoDownload({required String videoTitle,required String videoUrl,required
 
 
     currentCancelToken.whenCancel.then((value){
-      print("task was cancel. downloadedRange:$downloadedRange, was record to Hive");
+      Log.logprint("task was cancel. downloadedRange:$downloadedRange, was record to Hive");
 
       playerController.localDownloadTaskQueue[videoTitle]!
       .update("speed",(value){
@@ -265,7 +266,7 @@ void videoDownload({required String videoTitle,required String videoUrl,required
 
                   double currentSpeed = (newRecordRate-recordRate)*videoSize; //默认MB级别Label
 
-                  print("speed:${currentSpeed*1024}KB/s, rate:$newRecordRate");
+                  Log.logprint("speed:${currentSpeed*1024}KB/s, rate:$newRecordRate");
 
                   Map<String,Object?>? currentTask = playerController.localDownloadTaskQueue[videoTitle];
 
@@ -287,7 +288,7 @@ void videoDownload({required String videoTitle,required String videoUrl,required
               deleteOnError: false, //cancelToken也属于 Error的一种。。 嗯。。。
               //要不干脆使用raf接管?
             ).then((value){
-              print("video complete");
+              Log.logprint("video complete");
 
               if(currentStoragePath.contains(RegExp(r'partB$'))){
                 mergeVideo(videoTitle,".mp4");
@@ -302,7 +303,7 @@ void videoDownload({required String videoTitle,required String videoUrl,required
               "${StoragePath.downloadPath}${Platform.pathSeparator}$videoTitle.mp3",
               cancelToken: currentCancelToken,
               
-            ).then((value){print("audio complete");}) :
+            ).then((value){Log.logprint("audio complete");}) :
             Future(() => null)
 
           ]
@@ -316,7 +317,7 @@ void videoDownload({required String videoTitle,required String videoUrl,required
       }
 
       on DioException catch(error){
-        print(error);
+        Log.logprint(error);
       }
 
 
@@ -341,7 +342,7 @@ void mergeVideo(String videoTitle,String extName) async {
 
   await connectSink.close();
 
-  print("rename ext: $extName");
+  Log.logprint("rename ext: $extName");
 
   outputFile.renameSync("${StoragePath.downloadPath}${Platform.pathSeparator}$videoTitle.$extName");
 

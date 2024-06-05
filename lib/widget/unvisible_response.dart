@@ -9,10 +9,10 @@ class UnVisibleResponse extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkResponse(
-      onTap: onTap??(){;}, //it don't anything but block the hitTest to the downfloor
-      hoverColor: Colors.transparent,     // 圆点
+      onTap: onTap??(){;}, //Active onTap Action: it don't anything but block the hitTest to the downfloor
+      hoverColor: Colors.transparent,     // 悬浮时圆点
       highlightColor: Colors.transparent, // 点击时的圆点
-      splashColor: Colors.transparent,    //扩散水圈
+      splashColor: Colors.transparent,    // 扩散水圈
 
       child: child,
     );

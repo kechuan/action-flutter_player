@@ -5,9 +5,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_player/internal/enum_define.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/internal/log.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:flutter_player/model/video_model.dart';
-import 'package:flutter_player/widget/UnVisibleResponse.dart';
+import 'package:flutter_player/widget/unvisible_response.dart';
 import 'package:get/get.dart';
 
 class VideoGestureDector extends StatelessWidget {
@@ -30,11 +31,11 @@ class VideoGestureDector extends StatelessWidget {
     return GestureDetector(
 
       onLongPress: (){
-        print("long press test"); //预计用作视频加速 rate 调整
+        Log.logprint("long press test"); //预计用作视频加速 rate 调整
       },
 
       onLongPressEnd: (longPressDetail){
-        print("long press end test width:${MediaQuery.sizeOf(context).width} height:${MediaQuery.sizeOf(context).height}"); //预计用作视频加速 rate 调整
+        Log.logprint("long press end test width:${MediaQuery.sizeOf(context).width} height:${MediaQuery.sizeOf(context).height}"); //预计用作视频加速 rate 调整
       },
 
       onVerticalDragStart: (dragStartDetails){
@@ -46,7 +47,7 @@ class VideoGestureDector extends StatelessWidget {
         playerControlPanel.currentPageHeight = MediaQuery.sizeOf(context).height;
 
 
-        print("start Pos(${playerControlPanel.dragStartPositonX},${playerControlPanel.dragStartPositonY})"); //(0,0 => 左上角)
+        Log.logprint("start Pos(${playerControlPanel.dragStartPositonX},${playerControlPanel.dragStartPositonY})"); //(0,0 => 左上角)
 
         playerControlPanel.gestureDragingStatus.value = true;
 
@@ -56,9 +57,9 @@ class VideoGestureDector extends StatelessWidget {
         playerControlPanel.dragStartPositonX = dragStartDetails.localPosition.dx;
         playerControlPanel.dragStartPositonY = dragStartDetails.localPosition.dy;
 
-        print("start Pos(${playerControlPanel.dragStartPositonX},${playerControlPanel.dragStartPositonY})"); //(0,0 => 左上角)
+        Log.logprint("start Pos(${playerControlPanel.dragStartPositonX},${playerControlPanel.dragStartPositonY})"); //(0,0 => 左上角)
 
-        print("videoLoadedStatus:${playerControlPanel.videoLoadedStatus.value}, Type:${playerControlPanel.currentPlayingVideoType.value} ");
+        Log.logprint("videoLoadedStatus:${playerControlPanel.videoLoadedStatus.value}, Type:${playerControlPanel.currentPlayingVideoType.value} ");
 
         initalDuration = playerData.player.state.position.inSeconds;
 
@@ -90,7 +91,7 @@ class VideoGestureDector extends StatelessWidget {
 
             playerControlPanel.updateSliderStatus(showStatus:true,sliderTime:playerControlPanel.convertDuration(initalDuration));
 
-            print("residual:$residual playerData.durationTime:${playerData.player.state.duration.inSeconds},current:$limitedDurationTime");
+            Log.logprint("residual:$residual playerData.durationTime:${playerData.player.state.duration.inSeconds},current:$limitedDurationTime");
 
           } 
         
@@ -123,7 +124,7 @@ class VideoGestureDector extends StatelessWidget {
 
             await playerData.player.setVolume(limitedVolume.toDouble());
 
-            //print("local: ${dragVerticalUpdateDetails.localPosition.dy}, offset:${offsetHeight}, residual:$residual ,modify:$modifiyAmp");
+            //Log.logprint("local: ${dragVerticalUpdateDetails.localPosition.dy}, offset:${offsetHeight}, residual:$residual ,modify:$modifiyAmp");
 
             offsetHeight = dragVerticalUpdateDetails.localPosition.dy;
 
@@ -139,9 +140,9 @@ class VideoGestureDector extends StatelessWidget {
 
       onVerticalDragEnd: (details) {
 
-        print("state Volume ${playerData.player.state.volume}");
+        Log.logprint("state Volume ${playerData.player.state.volume}");
         //playerData.videoVolume = (playerData.player.state.volume/5).truncate();
-        print("playerData.videoVolume ${playerData.videoVolume}");
+        Log.logprint("playerData.videoVolume ${playerData.videoVolume}");
 
         playerControlPanel.gestureDragingStatus.value = false;
 
@@ -160,7 +161,7 @@ class VideoGestureDector extends StatelessWidget {
             playerControlPanel.toggleControlPanelStatus();
             playerControlPanel.hidePanelTimer();
 
-            print("panelStatus: status:${playerControlPanel.panelActiveStatus}, animated:${playerControlPanel.panelActiveAnimated}");
+            Log.logprint("panelStatus: status:${playerControlPanel.panelActiveStatus}, animated:${playerControlPanel.panelActiveAnimated}");
 
           },
           

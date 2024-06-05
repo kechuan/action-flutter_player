@@ -3,8 +3,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/internal/show_textfield_overlay.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:flutter_player/model/user_model.dart';
 
 import 'package:get/get.dart';
@@ -31,18 +32,18 @@ class SettingPanel extends StatelessWidget {
       future: Future.wait(
         [
           UserHive.getUserConfig("cookie").then((value){
-            //print("cookie:$value");
+            //Log.logprint("cookie:$value");
             UserModel.configList["cookie"] = value;
             cookieEditingController.text = value??'null';
           }),
 
           UserHive.getUserConfig("qualifiySetting").then((value){
-            //print("qualifiySetting:$value");
+            //Log.logprint("qualifiySetting:$value");
             UserModel.configList["qualifiySetting"] = value;
           }),
 
           UserHive.getUserConfig("encodeSetting").then((value){
-            //print("encodeSetting:$value");
+            //Log.logprint("encodeSetting:$value");
             UserModel.configList["encodeSetting"] = value;
           }),
 
@@ -86,7 +87,7 @@ class SettingPanel extends StatelessWidget {
                 }
 
                 if(playerControlPanel.currentOverlayEntry!=null){
-                  print("did Pop remove");
+                  Log.logprint("did Pop remove");
                   playerControlPanel.currentOverlayEntry!.remove();
                   playerControlPanel.currentOverlayEntry = null;
                 }
@@ -136,15 +137,15 @@ class SettingPanel extends StatelessWidget {
                                 //  onPressed: (){
                             
                                 //    UserHive.getUserConfig('qualifiySetting').then((value){
-                                //      print("qualifiySetting:$value");
+                                //      Log.logprint("qualifiySetting:$value");
                                 //    });
                             
                                 //    UserHive.getUserConfig('encodeSetting').then((value){
-                                //      print("encodeSetting:$value");
+                                //      Log.logprint("encodeSetting:$value");
                                 //    });
                             
                                 //    UserHive.getUserConfig('playMode').then((value){
-                                //      print("playMode:$value");
+                                //      Log.logprint("playMode:$value");
                                 //    });
                                 //  }, 
                                 //  child: const Text("User Get")
@@ -155,7 +156,7 @@ class SettingPanel extends StatelessWidget {
               
                                 //    Duration? test = (MyHive.videoRecordDataBase.get("anime1") as VideoDurationRecord?)?.videoPosition;
               
-                                //    print("$test");
+                                //    Log.logprint("$test");
                                 //  }, 
                                 //  child: const Text("video Duration Get")
                                 //),
@@ -318,7 +319,7 @@ class SettingPanel extends StatelessWidget {
                                                     ),
                                 
                                                     onChanged: (value){
-                                                      print("select:$value");
+                                                      Log.logprint("select:$value");
                                                       UserModel.configList['qualifiySetting'] = value;
                                                     },
                                                 
@@ -353,7 +354,7 @@ class SettingPanel extends StatelessWidget {
                                                         DropdownMenuItem(value: 'AV1',alignment :Alignment.center,child :Text('AV1')),
                                                       ], 
                                                       onChanged: (value){
-                                                        print("select:$value");
+                                                        Log.logprint("select:$value");
                                                   
                                                         //应该这样 Model 优先变动 然后当你真正的 离开了settingPanel的时候 再去使用setConfig来保存
                                                   
@@ -404,7 +405,7 @@ class SettingPanel extends StatelessWidget {
                                                         ),
                                                                                   
                                                         onChanged: (value){
-                                                          print("select:$value");
+                                                          Log.logprint("select:$value");
                                                           configList['playMode']['local'] = value;
                                                         },
                                                                                                         
@@ -431,7 +432,7 @@ class SettingPanel extends StatelessWidget {
                                                         ),
                                                                                   
                                                         onChanged: (value){
-                                                          print("select:$value");
+                                                          Log.logprint("select:$value");
                                                           configList['playMode']['online'] = value;
                                                         },
                                                                                                         

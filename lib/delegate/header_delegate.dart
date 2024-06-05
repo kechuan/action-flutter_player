@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_player/internal/log.dart';
 
 
 
@@ -20,7 +21,7 @@ class HeaderDelegate extends SliverPersistentHeaderDelegate {
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     
     //throw UnimplementedError();
-    print("shrinkOffset:$shrinkOffset");
+    Log.logprint("shrinkOffset:$shrinkOffset");
 
     return onBuild(context,shrinkOffset,overlapsContent);
     

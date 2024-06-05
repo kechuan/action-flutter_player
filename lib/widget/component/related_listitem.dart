@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/internal/log.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:get/get.dart';
 
 class RelatedVideoListItem extends StatelessWidget {
@@ -45,7 +46,7 @@ class RelatedVideoListItem extends StatelessWidget {
                 },
                 progressIndicatorBuilder: (context, url, progress) {
 
-                  print("${progress.downloaded}/${progress.totalSize}");
+                  Log.logprint("${progress.downloaded}/${progress.totalSize}");
 
                   //if(progress.downloaded != progress.totalSize){
                     return Container(

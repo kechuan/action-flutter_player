@@ -5,12 +5,13 @@ import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_player/enum_index.dart';
+import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/internal/request_encode.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:flutter_player/model/video_model.dart';
-import 'package:flutter_player/widget/UnVisibleResponse.dart';
-import 'package:flutter_player/widget/localVideoListview.dart';
-import 'package:flutter_player/widget/onlineVideoListview.dart';
+import 'package:flutter_player/widget/unvisible_response.dart';
+import 'package:flutter_player/widget/local_video_listview.dart';
+import 'package:flutter_player/widget/online_video_listview.dart';
 import 'package:get/get.dart';
 
 
@@ -45,15 +46,15 @@ class DrawVideoSelectPanel extends StatelessWidget {
       child: PopScope(
         canPop : false,
         onPopInvoked:(didPop) {
-          print("did Pop:$didPop");
+          Log.logprint("did Pop:$didPop");
 
           if(MediaQuery.viewInsetsOf(context).bottom > 0 || playerControlPanel.currentOverlayEntry == null){
-            print("did close Action");
+            Log.logprint("did close Action");
             Scaffold.of(context).closeEndDrawer();
           }
 
           if(playerControlPanel.currentOverlayEntry!=null){
-            print("did Pop remove");
+            Log.logprint("did Pop remove");
             playerControlPanel.currentOverlayEntry!.remove();
             playerControlPanel.currentOverlayEntry = null;
             return;
@@ -82,14 +83,14 @@ class DrawVideoSelectPanel extends StatelessWidget {
                             child: TextButton(
                               
                               onPressed: (){
-                                print("switch to ${nameList[index]} page");
+                                Log.logprint("switch to ${nameList[index]} page");
                                 
                                 videoResourceController.animateToPage(index,duration: const Duration(milliseconds: 300),curve: Curves.easeIn);
                                 currentIndexNotifier.value = index.toDouble();
                                 
                                 playerControlPanel.recordVideoResourcePageIndex = index;
         
-                                print("width:${(context.findRenderObject() as RenderBox).size.width}");
+                                Log.logprint("width:${(context.findRenderObject() as RenderBox).size.width}");
                                 
                               }, 
                               //child: Text(nameList[index],style: const TextStyle(color: Color.fromARGB(255, 22, 27, 33),fontSize: 14))
@@ -183,7 +184,7 @@ class DrawVideoSelectPanel extends StatelessWidget {
             NotificationListener(
             //横向滚动监听
               onNotification: (ScrollUpdateNotification notification) {
-                //print("${notification.metrics.axis}");
+                //Log.logprint("${notification.metrics.axis}");
                 final double offset = notification.metrics.pixels;
                 if(notification.metrics.axis == Axis.horizontal){
                   currentIndexNotifier.value = max(offset/400,-0.12);
@@ -209,11 +210,11 @@ class DrawVideoSelectPanel extends StatelessWidget {
                 onRefresh: (){
         
                   if(videoResourceController.page!.toInt() == VideoResource.local.index){
-                    print("local refresh");
+                    Log.logprint("local refresh");
                   }
         
                   if(videoResourceController.page!.toInt() == VideoResource.online.index){
-                    print("rcmd refresh");
+                    Log.logprint("rcmd refresh");
         
         
                     try{
@@ -222,7 +223,7 @@ class DrawVideoSelectPanel extends StatelessWidget {
                     }
         
                     on DioException catch(error){
-                      print(error);
+                      Log.logprint(error);
                       //根据错误的不同 应弹出不同的。。toaster?
                     }
                   }
@@ -232,7 +233,7 @@ class DrawVideoSelectPanel extends StatelessWidget {
         
                   bool searchingFocus = playerControlPanel.searchingFocus.value;
         
-                  print("searchFocus:$searchingFocus");
+                  Log.logprint("searchFocus:$searchingFocus");
         
                   return PageView(
                     physics: searchingFocus?const NeverScrollableScrollPhysics():null,

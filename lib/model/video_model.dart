@@ -7,10 +7,11 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_player/internal/enum_define.dart';
 
 import 'package:flutter_player/internal/hive.dart';
+import 'package:flutter_player/internal/log.dart';
 
 import 'package:flutter_player/internal/request_encode.dart';
 import 'package:flutter_player/internal/url_request.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 
 import 'package:flutter_player/model/user_model.dart';
 import 'package:get/get.dart';
@@ -70,7 +71,7 @@ class VideoModel extends GetxController{
     //目前执行顺序如下
 
     if(!playerinitalFlag.value){
-      print("init player trigged");
+      Log.logprint("init player trigged");
       player = Player(
         configuration: const PlayerConfiguration(
           bufferSize: 5*1024*1024, //应当跟着config配置
@@ -94,8 +95,8 @@ class VideoModel extends GetxController{
           await (player.platform as dynamic).setProperty('demuxer-max-back-bytes', '0');   // --demuxer-max-back-bytes=<bytesize>
           await (player.platform as dynamic).setProperty('demuxer-donate-buffer', 'no');   // --demuxer-donate-buffer==<yes|no>
 
-          print("all prop loaded");
-          print("player.hashCode: ${player.hashCode} was created");
+          Log.logprint("all prop loaded");
+          Log.logprint("player.hashCode: ${player.hashCode} was created");
 
           playerinitalFlag.value = true;
 
@@ -121,7 +122,7 @@ class VideoModel extends GetxController{
 
         
         //这个执行顺序比videoPage初始化还要晚的多的多 真的不太明白 那个顺序是怎么搞的
-        print("VideoModel was initaled");
+        Log.logprint("VideoModel was initaled");
 
         videoModelInitaled = true;
         
@@ -142,7 +143,7 @@ class VideoModel extends GetxController{
 
     if(ClientCookies.sessData.isNotEmpty){
       UserModel.isLogined = true;
-      print("is Logined");
+      Log.logprint("is Logined");
     }
 
     else{
@@ -174,7 +175,7 @@ class VideoModel extends GetxController{
 
     //被销毁暂停时 重建player
     if(playerinitalFlag.value==false){
-      print("disposed, rebuild player");
+      Log.logprint("disposed, rebuild player");
       initPlayer();
     }
 
@@ -185,7 +186,7 @@ class VideoModel extends GetxController{
 
         if(dashAudioUri!=null){
 
-          print("it has audio:$dashAudioUri");
+          Log.logprint("it has audio:$dashAudioUri");
 
           playerControlPanel.togglePlayerUIStatus(PlayerStatus.loading);
 
@@ -223,7 +224,7 @@ class VideoModel extends GetxController{
       player.setAudioTrack(AudioTrack.uri(dashAudioUri));
 
       var timeoutTimer = Timer(const Duration(seconds: 6),(){
-        print("audio loaded fail,${player.state.tracks.audio}");
+        Log.logprint("audio loaded fail,${player.state.tracks.audio}");
         
 
         player.setAudioTrack(AudioTrack.uri(dashAudioUri)); //request Again
@@ -231,7 +232,7 @@ class VideoModel extends GetxController{
       });
 
       player.stream.audioParams.listen((event) {
-        print("loading audio Stream,$event");
+        Log.logprint("loading audio Stream,$event");
         
           if(event.format!=null){
             //好像 触发了两次回调? : (2) flutter: loading
@@ -243,7 +244,7 @@ class VideoModel extends GetxController{
 
             audioLoadCompleter.complete();
             timeoutTimer.cancel();
-            print("audio Stream Loaded");
+            Log.logprint("audio Stream Loaded");
 
           }
 
@@ -264,20 +265,20 @@ class VideoModel extends GetxController{
 
     if(UserModel.isLogined){ 
       //Access With Member 
-      print("Member Mode");
+      Log.logprint("Member Mode");
       parsingVideoUrl = encodeHTTPRequest(orignalUrl);
     
     }
 
     else{  
       //Access With Guest
-      print("Guest Mode");
+      Log.logprint("Guest Mode");
       parsingVideoUrl = orignalUrl;
     }
 
     parsingVideoUrl = parsingVideoUrl.split(SuffixHttpString.baseUrl)[1];
 
-    print("After Split:$parsingVideoUrl");
+    Log.logprint("After Split:$parsingVideoUrl");
 
     await HttpApiClient.client.get(
       parsingVideoUrl,
@@ -289,19 +290,19 @@ class VideoModel extends GetxController{
       ),
     ).then((response){
 
-      //print("response:$response");
+      //Log.logprint("response:$response");
       
       // 解析错误 判断
       if(dashFlag){
         if(response.data["data"]?["dash"]!=null && response.data["data"]?["dash"].isEmpty){
-          print("DASH parse fail:$response");
+          Log.logprint("DASH parse fail:$response");
           return;
         }
       }
 
       else{
         if(response.data["data"]?["durl"]!=null && response.data["data"]?["durl"].isEmpty){
-          print("FLV parse fail:$response");
+          Log.logprint("FLV parse fail:$response");
           return;
         }
       }
@@ -320,16 +321,16 @@ class VideoModel extends GetxController{
 
         if(dashFlag && UserModel.isLogined){
 
-          List<dynamic> accept_description = responseInformation['accept_description'];
-          List<dynamic> accept_quality = responseInformation['accept_quality'];
+          List<dynamic> acceptDescription = responseInformation['acceptDescription'];
+          List<dynamic> acceptQuality = responseInformation['acceptQuality'];
 
           List<dynamic> videoInforamtion = response.data["data"]["dash"]["video"];
           List<dynamic> audioInforamtion = response.data["data"]["dash"]["audio"];
 
           //一个画质里面有多少个编码 比如id:80 avc,hevc 则有2个编码
-          //int encodeStack = videoInforamtion.length ~/(responseInformation["accept_quality"].length - 1);
+          //int encodeStack = videoInforamtion.length ~/(responseInformation["acceptQuality"].length - 1);
 
-          int encodeStack = videoInforamtion.length ~/(responseInformation["accept_quality"].length - 1);
+          int encodeStack = videoInforamtion.length ~/(responseInformation["acceptQuality"].length - 1);
 
           int codecOffset = 0; // avc/hevc/av1 7 12 13
           int qualifyOffset = 0;
@@ -383,15 +384,15 @@ class VideoModel extends GetxController{
           double currentVideoSize = 0;
           double currentAudioSize = selectedAudioInformation["bandwidth"]/8*response.data["data"]["dash"]["duration"]/1024/1024;
 
-          print("code Offset:$codecOffset, encodeStack:$encodeStack, accept_quality_length:${responseInformation["accept_quality"].length}");
+          Log.logprint("code Offset:$codecOffset, encodeStack:$encodeStack, acceptQuality_length:${responseInformation["acceptQuality"].length}");
           
           //Video Select
-          for(int currentQuality = 0; currentQuality < responseInformation["accept_quality"].length; currentQuality++){
+          for(int currentQuality = 0; currentQuality < responseInformation["acceptQuality"].length; currentQuality++){
 
             //1080P+ 的信息 目前置为空
             if(currentQuality == 0){
               videoQualityInforamtion.addAll(
-                {accept_description[0]:""}
+                {acceptDescription[0]:""}
               );
               sizeInformation.add(null);
 
@@ -402,11 +403,11 @@ class VideoModel extends GetxController{
               int selectIndex = encodeStack*(currentQuality-1)+codecOffset;
 
 
-              print("已选择 index: $selectIndex");
+              Log.logprint("已选择 index: $selectIndex");
               currentVideoSize = (videoInforamtion[selectIndex]["bandwidth"]/8*response.data["data"]["dash"]["duration"]/1024/1024);
 
             videoQualityInforamtion.addAll(
-              {accept_description[currentQuality]:videoInforamtion[selectIndex]["baseUrl"]}
+              {acceptDescription[currentQuality]:videoInforamtion[selectIndex]["baseUrl"]}
             );
             
             sizeInformation.add(currentVideoSize+currentAudioSize);
@@ -428,7 +429,7 @@ class VideoModel extends GetxController{
 
           
 
-          print("accept_description:${accept_description}, accept_quality:${accept_quality}");
+          Log.logprint("acceptDescription:$acceptDescription, acceptQuality:$acceptQuality");
 
         }
 
@@ -459,13 +460,13 @@ class VideoModel extends GetxController{
         }
 
         else{
-          print("onlineInformation:$videoQualityInforamtion");
+          Log.logprint("onlineInformation:$videoQualityInforamtion");
         }
 
       }
 
       else{
-        print("parse error:$response");
+        Log.logprint("parse error:$response");
         
       }
 
@@ -508,7 +509,7 @@ class VideoModel extends GetxController{
       }
 
       else{
-        print("playlist completed.");
+        Log.logprint("playlist completed.");
       }
     }
 
@@ -534,9 +535,9 @@ class VideoModel extends GetxController{
 
     Duration? recordDuration = (MyHive.videoRecordDataBase.get(localVideoInformation["title"]));
 
-      print("[read Duration] ${localVideoInformation["title"]}: $recordDuration");
+      Log.logprint("[read Duration] ${localVideoInformation["title"]}: $recordDuration");
                       
-      //print("list:${MyHive.videoRecordDataBase.keys}");
+      //Log.logprint("list:${MyHive.videoRecordDataBase.keys}");
                       
       currentPlayingInformation["title"] = localVideoInformation["title"];
       
@@ -550,15 +551,15 @@ class VideoModel extends GetxController{
   void playerCompletedStatusListen(){
     player.stream.completed.listen((completedStatus) {
 
-      print("status: initModel ${playerinitalFlag.value}, ${player.state.position.inMilliseconds}/${player.state.duration.inMilliseconds}");
+      Log.logprint("status: initModel ${playerinitalFlag.value}, ${player.state.position.inMilliseconds}/${player.state.duration.inMilliseconds}");
 
       if(playerinitalFlag.value){ //一重验证 是在播放器载入之后才应触发
 
-        print("endStream evented trigged");
+        Log.logprint("endStream evented trigged");
 
       //不确定性验证 触发completed回调后 如果播放进度差值低于1s 则允许触发
         if(player.state.duration.inMilliseconds - player.state.position.inMilliseconds < 1000 && player.state.duration.inSeconds != 0){
-          print("completed event trigged, reset prop");
+          Log.logprint("completed event trigged, reset prop");
 
           //决定是否触发本地模式下的播放列表
           playModeHandler();
@@ -597,7 +598,7 @@ class VideoModel extends GetxController{
     if(!playerinitalFlag.value) return;
 
     player.dispose().then((value){
-      print("player.hashCode: ${player.hashCode} was disposed");
+      Log.logprint("player.hashCode: ${player.hashCode} was disposed");
       playerinitalFlag.value = false;
     });
 

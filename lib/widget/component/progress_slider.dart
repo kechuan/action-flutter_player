@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_player/internal/enum_define.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/internal/log.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:flutter_player/model/video_model.dart';
 import 'package:get/get.dart';
 import 'dart:math';
@@ -99,7 +100,7 @@ class ProgressSlider extends StatelessWidget {
                   if(videoType == VideoType.onlineStream.index) return;
                   if(!playerControlPanel.videoLoadedStatus.value) return;
               
-                  print("release rate:$value, ${playerControlPanel.convertDuration((value*videoTotalDuration).toInt())}/${playerControlPanel.convertDuration(videoTotalDuration)} ");
+                  Log.logprint("release rate:$value, ${playerControlPanel.convertDuration((value*videoTotalDuration).toInt())}/${playerControlPanel.convertDuration(videoTotalDuration)} ");
                   
                   playerControlPanel.sliderDragingStatus = false;
               

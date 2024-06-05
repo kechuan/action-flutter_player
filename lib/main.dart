@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 //import 'package:flutter_player/catalog/middleWare/videoPageMiddleware.dart';
-import 'package:flutter_player/catalog/videoPage.dart';
+import 'package:flutter_player/catalog/video_page.dart';
 
 import 'package:flutter_player/internal/hive.dart';
-import 'package:flutter_player/model/playerUI_model.dart';
+import 'package:flutter_player/internal/log.dart';
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:flutter_player/model/video_model.dart';
 
 import 'package:get/get.dart';
@@ -18,7 +19,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:window_manager/window_manager.dart';
 
-import './catalog/initLoadingPage.dart';
+import 'package:flutter_player/catalog/init_loading_page.dart';
 
 void main() async{
 	
@@ -77,7 +78,7 @@ void main() async{
     var storagePermission = await Permission.manageExternalStorage.request();
 
     if(storagePermission.isGranted){
-      print("external permission given.");
+      Log.logprint("external permission given.");
       await MyHive.init();
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -90,7 +91,7 @@ void main() async{
       SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]
       ).then((value) => {
-        print("apply Android landscape."),
+        Log.logprint("apply Android landscape."),
         
         runApp(const MyApp())
       });
@@ -114,7 +115,7 @@ class MyApp extends StatelessWidget {
 	Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (context,orientation) {
-        print("当前的屏幕方向:$orientation");
+        Log.logprint("当前的屏幕方向:$orientation");
         return GetMaterialApp(
             theme: ThemeData(
               scrollbarTheme: const ScrollbarThemeData(
