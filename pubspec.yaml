@@ -1,7 +1,7 @@
 name: flutter_player
-description: A new Flutter project.
+description: A Flutter player Project.
 publish_to: 'none'
-version: 0.1.0
+version: 0.2.5
 
 environment:
   sdk: '>=3.1.2 <4.0.0'

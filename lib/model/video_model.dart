@@ -254,31 +254,29 @@ class VideoModel extends GetxController{
 
     }
 
-  //Future<Media> parsingVideo(String orignalUrl,bool dashFlag,[bool? videoLoadFlag]) async {
+  //要是在往里再加需要就必须要拆分Function 或者 class 了(如果要拆分成class 那其实也等于要把整个Download-Action也一并拆分成class)
   Future<Media> parsingVideo({required String orignalUrl,required bool dashFlag, bool? videoLoadFlag, bool? isrcmd}) async {
 
-    Media onlineMediaInformation = Media("");
+    late Media onlineMediaInformation;
 
-    String parsingVideoUrl = "";
+    String parsingVideoUrl;
     String? parsingAudioUrl;
-
 
     if(UserModel.isLogined){ 
       //Access With Member 
-      Log.logprint("Member Mode");
+      Log.i("Member Mode");
       parsingVideoUrl = encodeHTTPRequest(orignalUrl);
-    
     }
 
     else{  
       //Access With Guest
-      Log.logprint("Guest Mode");
+      Log.i("Guest Mode");
       parsingVideoUrl = orignalUrl;
     }
 
     parsingVideoUrl = parsingVideoUrl.split(SuffixHttpString.baseUrl)[1];
 
-    Log.logprint("After Split:$parsingVideoUrl");
+    Log.i("After Split:$parsingVideoUrl");
 
     await HttpApiClient.client.get(
       parsingVideoUrl,
@@ -289,13 +287,12 @@ class VideoModel extends GetxController{
         receiveTimeout: const Duration(seconds: 5),
       ),
     ).then((response){
-
-      //Log.logprint("response:$response");
       
       // 解析错误 判断
       if(dashFlag){
         if(response.data["data"]?["dash"]!=null && response.data["data"]?["dash"].isEmpty){
           Log.logprint("DASH parse fail:$response");
+          Get.snackbar("", "疑似img,sub信息失效");
           return;
         }
       }
@@ -303,6 +300,7 @@ class VideoModel extends GetxController{
       else{
         if(response.data["data"]?["durl"]!=null && response.data["data"]?["durl"].isEmpty){
           Log.logprint("FLV parse fail:$response");
+          Get.snackbar("", "疑似img,sub信息失效");
           return;
         }
       }
@@ -319,143 +317,150 @@ class VideoModel extends GetxController{
           sizeInformation = rcmdDownloadQualitySize;
         }
 
-        if(dashFlag && UserModel.isLogined){
+        try{
 
-          List<dynamic> acceptDescription = responseInformation['acceptDescription'];
-          List<dynamic> acceptQuality = responseInformation['acceptQuality'];
+          if(dashFlag && UserModel.isLogined){
 
-          List<dynamic> videoInforamtion = response.data["data"]["dash"]["video"];
-          List<dynamic> audioInforamtion = response.data["data"]["dash"]["audio"];
+            List<dynamic> acceptDescription = responseInformation['accept_description'];
+            List<dynamic> acceptQuality = responseInformation['accept_quality'];
 
-          //一个画质里面有多少个编码 比如id:80 avc,hevc 则有2个编码
-          //int encodeStack = videoInforamtion.length ~/(responseInformation["acceptQuality"].length - 1);
+            List<dynamic> videoInforamtion = response.data["data"]["dash"]["video"];
+            List<dynamic> audioInforamtion = response.data["data"]["dash"]["audio"];
 
-          int encodeStack = videoInforamtion.length ~/(responseInformation["acceptQuality"].length - 1);
+            //一个画质里面有多少个编码 比如id:80 avc,hevc 则有2个编码
+            //int encodeStack = videoInforamtion.length ~/(responseInformation["accept_quality"].length - 1);
 
-          int codecOffset = 0; // avc/hevc/av1 7 12 13
-          int qualifyOffset = 0;
-          int codecID = 12;
+            int encodeStack = videoInforamtion.length ~/(responseInformation["accept_quality"].length - 1);
 
-          switch(UserModel.configList["encodeSetting"]){
-            case 'AVC': codecID = 7;break;
-            case 'HEVC': codecID = 12;break;
-            case 'AV1': codecID = 13;break;
-          }
+            int codecOffset = 0; // avc/hevc/av1 7 12 13
+            int qualifyOffset = 0;
+            int codecID = 12;
 
-          switch(UserModel.configList["qualifiySetting"]){
-            case 'FHD': qualifyOffset = 0;break;
-            case 'HD': qualifyOffset = 1;break;
-            case 'Mediumn': qualifyOffset = 2;break;
-            case 'Low': qualifyOffset = 3;break;
-            case 'VeryLow': qualifyOffset = 4;break;
-          }
+            switch(UserModel.configList["encodeSetting"]){
+              case 'AVC': codecID = 7;break;
+              case 'HEVC': codecID = 12;break;
+              case 'AV1': codecID = 13;break;
+            }
 
-          videoQualityInforamtion.clear();
-          sizeInformation.clear();
+            switch(UserModel.configList["qualifiySetting"]){
+              case 'FHD': qualifyOffset = 0;break;
+              case 'HD': qualifyOffset = 1;break;
+              case 'Mediumn': qualifyOffset = 2;break;
+              case 'Low': qualifyOffset = 3;break;
+              case 'VeryLow': qualifyOffset = 4;break;
+            }
 
-          //数据来源:API
+            videoQualityInforamtion.clear();
+            sizeInformation.clear();
 
-          //b站不知道为什么 有时候audio的第一个是低品质的音源(30232)。。 最高品质的反而是在第二个(30280)
-          Map selectedAudioInformation;
-          
-          //根据设置偏好的codec 选择自适应选择offset
+            //数据来源:API
+
+            //b站不知道为什么 有时候audio的第一个是低品质的音源(30232)。。 最高品质的反而是在第二个(30280)
+            Map selectedAudioInformation;
+            
+            //根据设置偏好的codec 选择自适应选择offset
 
 
-          for(int codecIndex = 0;codecIndex<encodeStack; codecIndex++){
+            for(int codecIndex = 0;codecIndex<encodeStack; codecIndex++){
 
-            if(videoInforamtion[codecIndex]["codecid"] != codecID){
-               codecOffset++;
+              if(videoInforamtion[codecIndex]["codecid"] != codecID){
+                codecOffset++;
+              }
+
+              else{
+                break;
+              }
+            }
+
+            //Audio Select
+            selectedAudioInformation = audioInforamtion[0];
+            for(int audioIndex = 0; audioIndex<audioInforamtion.length;audioIndex++){
+              if(audioInforamtion[audioIndex]["id"] == 30280){
+                selectedAudioInformation = audioInforamtion[audioIndex];
+                break;
+              }
+            }
+
+            double currentVideoSize = 0;
+            double currentAudioSize = selectedAudioInformation["bandwidth"]/8*response.data["data"]["dash"]["duration"]/1024/1024;
+
+            Log.logprint("code Offset:$codecOffset, encodeStack:$encodeStack, accept_quality length:${responseInformation["accept_quality"].length}");
+            
+            //Video Select
+            for(int currentQuality = 0; currentQuality < responseInformation["accept_quality"].length; currentQuality++){
+
+              //1080P+ 的信息 目前置为空
+              if(currentQuality == 0){
+                videoQualityInforamtion.addAll(
+                  {acceptDescription[0]:""}
+                );
+                sizeInformation.add(null);
+
+                continue;
+
+              }
+
+                int selectIndex = encodeStack*(currentQuality-1)+codecOffset;
+
+
+                Log.logprint("已选择 index: $selectIndex");
+                currentVideoSize = (videoInforamtion[selectIndex]["bandwidth"]/8*response.data["data"]["dash"]["duration"]/1024/1024);
+
+              videoQualityInforamtion.addAll(
+                {acceptDescription[currentQuality]:videoInforamtion[selectIndex]["baseUrl"]}
+              );
+              
+              sizeInformation.add(currentVideoSize+currentAudioSize);
+              
+            }
+
+            parsingVideoUrl = videoInforamtion[(encodeStack*qualifyOffset)+codecOffset]["baseUrl"];
+            parsingAudioUrl = selectedAudioInformation["baseUrl"];
+
+
+            if(isrcmd!=null && isrcmd == true){
+              rcmdDownloadAudioUrl = parsingAudioUrl;
             }
 
             else{
-              break;
-            }
-          }
-
-          //Audio Select
-          selectedAudioInformation = audioInforamtion[0];
-          for(int audioIndex = 0; audioIndex<audioInforamtion.length;audioIndex++){
-            if(audioInforamtion[audioIndex]["id"] == 30280){
-              selectedAudioInformation = audioInforamtion[audioIndex];
-              break;
-            }
-          }
-
-          double currentVideoSize = 0;
-          double currentAudioSize = selectedAudioInformation["bandwidth"]/8*response.data["data"]["dash"]["duration"]/1024/1024;
-
-          Log.logprint("code Offset:$codecOffset, encodeStack:$encodeStack, acceptQuality_length:${responseInformation["acceptQuality"].length}");
-          
-          //Video Select
-          for(int currentQuality = 0; currentQuality < responseInformation["acceptQuality"].length; currentQuality++){
-
-            //1080P+ 的信息 目前置为空
-            if(currentQuality == 0){
-              videoQualityInforamtion.addAll(
-                {acceptDescription[0]:""}
-              );
-              sizeInformation.add(null);
-
-              continue;
-
+              currentPlayingInformation["videoUrl"] = parsingVideoUrl;
+              currentPlayingInformation["audioUrl"] = parsingAudioUrl;
             }
 
-              int selectIndex = encodeStack*(currentQuality-1)+codecOffset;
-
-
-              Log.logprint("已选择 index: $selectIndex");
-              currentVideoSize = (videoInforamtion[selectIndex]["bandwidth"]/8*response.data["data"]["dash"]["duration"]/1024/1024);
-
-            videoQualityInforamtion.addAll(
-              {acceptDescription[currentQuality]:videoInforamtion[selectIndex]["baseUrl"]}
-            );
             
-            sizeInformation.add(currentVideoSize+currentAudioSize);
-            
-          }
+            Log.logprint("acceptDescription:$acceptDescription, acceptQuality:$acceptQuality");
 
-          parsingVideoUrl = videoInforamtion[(encodeStack*qualifyOffset)+codecOffset]["baseUrl"];
-          parsingAudioUrl = selectedAudioInformation["baseUrl"];
-
-
-          if(isrcmd!=null && isrcmd == true){
-            rcmdDownloadAudioUrl = parsingAudioUrl;
           }
 
           else{
-            currentPlayingInformation["videoUrl"] = parsingVideoUrl;
-            currentPlayingInformation["audioUrl"] = parsingAudioUrl;
+            parsingVideoUrl = response.data["data"]["durl"][0]["url"];
+
+            if(isrcmd!=null && isrcmd == true){
+              rcmdDownloadQualitySize.add({"高清 1080P":parsingVideoUrl});
+            }
+
+            else{
+              currentPlayingInformation["videoUrl"] = parsingVideoUrl;
+            }
+
+            sizeInformation.add(response.data["data"]["durl"][0]["size"]/1024/1024); //durl请求的视频size的大小是 Byte为单位
           }
 
-          
-
-          Log.logprint("acceptDescription:$acceptDescription, acceptQuality:$acceptQuality");
 
         }
 
-        else{
-          parsingVideoUrl = response.data["data"]["durl"][0]["url"];
-
-          if(isrcmd!=null && isrcmd == true){
-            rcmdDownloadQualitySize.add({"高清 1080P":parsingVideoUrl});
-          }
-
-          else{
-            currentPlayingInformation["videoUrl"] = parsingVideoUrl;
-          }
-
-          
-
-          sizeInformation.add(response.data["data"]["durl"][0]["size"]/1024/1024); //durl请求的视频size的大小是 Byte为单位
+        on TypeError catch(e) {
+          Get.snackbar("", e.toString() ,maxWidth: 120);
         }
 
+          
         onlineMediaInformation = Media(
           parsingVideoUrl,
           httpHeaders:HttpApiClient.broswerHeader
         );
 
         //debug模式 置为false时 则只输出文字
-        if(videoLoadFlag==null || videoLoadFlag==true){
+        if(videoLoadFlag==true){
           playerVideoLoad(video: onlineMediaInformation,dashAudioUri:parsingAudioUrl);
         }
 
@@ -467,6 +472,7 @@ class VideoModel extends GetxController{
 
       else{
         Log.logprint("parse error:$response");
+        Get.snackbar("", "video parse error:$response",maxWidth: 120);
         
       }
 

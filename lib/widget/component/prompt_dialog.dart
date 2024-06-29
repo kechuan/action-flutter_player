@@ -154,10 +154,8 @@ class DownloadQualifySelectPanel extends StatelessWidget {
 
                             }
 
-                            Log.logprint("wrong. not add");
+                            Log.i("wrong. not add");
 
-                            
-                              
                           },
                         ),
                       ),

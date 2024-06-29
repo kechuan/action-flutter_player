@@ -6,19 +6,18 @@ import 'dart:math';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:get/get.dart';
 
 import 'package:flutter_player/internal/convert_task_queue_information.dart';
 import 'package:flutter_player/internal/enum_define.dart';
 import 'package:flutter_player/internal/file_pick.dart';
-
 import 'package:flutter_player/internal/hive.dart';
 import 'package:flutter_player/internal/log.dart';
 import 'package:flutter_player/internal/url_request.dart';
 import 'package:flutter_player/internal/video_download.dart';
-import 'package:flutter_player/model/player_ui_model.dart';
 
+import 'package:flutter_player/model/player_ui_model.dart';
 import 'package:flutter_player/model/video_model.dart';
-import 'package:get/get.dart';
 
 final videoFliter = RegExp(r'mkv|mp4|flv|webv|m2ts|rmvb$');
 
@@ -131,8 +130,6 @@ class LocalVideoListView extends StatelessWidget {
                             );
                           }
                         ),
-
-                        
 
                       ],
                     ),

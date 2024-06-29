@@ -120,8 +120,11 @@ class PlayerCompletedPanel extends StatelessWidget {
                 ],
               ),
             ),
-                              
+
+            MediaQuery.sizeOf(context).width*1/3 < 400 ? 
+            const SizedBox.shrink() : 
             const Spacer(),
+            
                               
             Expanded(
               flex: 3,

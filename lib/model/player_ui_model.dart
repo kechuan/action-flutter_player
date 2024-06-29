@@ -1,5 +1,4 @@
 
-
 import 'dart:async';
 import 'dart:math';
 
@@ -25,7 +24,6 @@ class PlayerUIModel extends GetxController{
   final RxBool videoLoadedStatus = false.obs;
   final RxBool playerPlayingStatus = false.obs;
   
-
   //目前用于显示loadingAudio的状态
   final RxBool playerAudioBufferingStatus = false.obs;
 
@@ -263,12 +261,29 @@ class PlayerUIModel extends GetxController{
 
               Log.logprint("'escape' trigged");
               //disposePage();
-              
-              playerData.disposePlayer();
 
-              togglePlayerUIStatus(PlayerStatus.indle);
-              
+              if(!playerData.playerinitalFlag.value){
+                //执行退出Dialog
+                //void escape Dialog
 
+                if(Get.isOverlaysOpen){
+                  Get.back(
+                    closeOverlays:true
+                  );
+                }
+
+                else{
+                  showEscapeDialog();
+                }
+              
+              }
+
+              else{
+                playerData.disposePlayer();
+                togglePlayerUIStatus(PlayerStatus.indle);
+
+              }
+              
             }
 
             case LogicalKeyboardKey.keyL:{
@@ -277,7 +292,6 @@ class PlayerUIModel extends GetxController{
                          
             }
 
-            
           }
 
       }
@@ -357,6 +371,10 @@ class PlayerUIModel extends GetxController{
 
   void updateSliderDrag(){
     update(["sliderDrag"]);
+  }
+
+  void updatePanelTitle(){
+    update(["title"]);
   }
 
   void hidePanelTimer(){
@@ -516,7 +534,37 @@ class PlayerUIModel extends GetxController{
 
   }
 
-  void updatePanelTitle(){
-    update(["title"]);
+  void showEscapeDialog(){
+    Get.dialog(
+      Dialog(
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          width: 150,
+          height: 100,
+          child: Column(
+            
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              
+              const Text("退出?",style: TextStyle(fontSize: 18)),
+        
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children:[
+                  TextButton(onPressed: (){
+                    Get.back();
+                  }, child: const Text("取消")),
+                  TextButton(onPressed: () async {
+                    await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                  }, child: const Text("确定"))
+                ]
+              )
+        
+            ],
+          ),
+        ),
+      )
+    );
   }
+
 }

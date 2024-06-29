@@ -81,6 +81,7 @@ class SettingPanel extends StatelessWidget {
             return WillPopScope(
               
               onWillPop:() async {
+                //JIT way. Function context is dynamic. PopScopt is fixed way
 
                 if(MediaQuery.viewInsetsOf(context).bottom>0 || playerControlPanel.currentOverlayEntry == null){
                   return true;
@@ -95,9 +96,7 @@ class SettingPanel extends StatelessWidget {
                 return false;
 
               },
-              child: 
-              
-              Column(
+              child: Column(
               
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -220,12 +219,14 @@ class SettingPanel extends StatelessWidget {
                                                     //bool obxUpdate = UserModel.editingCookieFlag.value;
                                                      return Row(
                                                        children: [
+
+                                                        Text(UserModel.cookiesState,style: const TextStyle(color: Color.fromARGB(255, 30, 0, 255))),
               
-                                                          !UserModel.isModifiedCookie ?
-                                                          const SizedBox.shrink() :
-                                                            UserModel.verifingCookie.value ?
-                                                            const Text("等待中...") : //这里应该是Pending 与 result
-                                                             Text(UserModel.cookiesState,style: const TextStyle(color: Color.fromARGB(255, 30, 0, 255)),),
+                                                          //!UserModel.isModifiedCookie ?
+                                                          //const SizedBox.shrink() :
+                                                          //  UserModel.verifingCookie.value ?
+                                                          //  const Text("等待中...") : //这里应该是Pending 与 result
+                                                          //   Text(UserModel.cookiesState,style: const TextStyle(color: Color.fromARGB(255, 30, 0, 255))),
                                                           
                                                           Visibility(
                                                             //visible: !UserModel.isLogined ? UserModel.verifingCookie.value : UserModel.isLogined,

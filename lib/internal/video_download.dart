@@ -155,6 +155,8 @@ void showDownloadDialog({String? bvid,int? cid,String? title}) async {
 }
 
 //value 本质就是  {[战地2042]听不清楚该上市: 1} 1 => 画质 画质 本质 -> videoSize 所以传size数据就够了
+
+//注意 这里的double videoSize 在传入时已经是以 MB 为单位了
 void videoDownload({required String videoTitle,required String videoUrl,required double videoSize,String? currentAudioUrl,int? rangeInformation}) async {
 
   final playerController = Get.find<VideoModel>();
@@ -173,15 +175,15 @@ void videoDownload({required String videoTitle,required String videoUrl,required
 
     int downloadedRange = 0;
 
-
+    //cancelToken触发时行为
     currentCancelToken.whenCancel.then((value){
+
+      //videoDownloadCancel()
+
       Log.logprint("task was cancel. downloadedRange:$downloadedRange, was record to Hive");
 
       playerController.localDownloadTaskQueue[videoTitle]!
-      .update("speed",(value){
-        //return {"rate":-1.0,"speed":null,"size":videoSize};
-        return null;
-      });
+      .update("speed",(value) => null);
 
       //如果当前存储目标存在partA 应合并当前的partA/partB 为新的partA
       //称作mergeBody
@@ -197,18 +199,14 @@ void videoDownload({required String videoTitle,required String videoUrl,required
         ..audioUrl = currentAudioUrl
       );
 
-      //rename to .PartA
-
-      
-    //难道是whenCacnel执行完毕之后才不占用?
+    //rename to .PartA
     }).then((value){
-
+      //如已存在(被暂停过不止1次).PartA 则融合它和新文件为新的PartA
       if(currentStoragePath.contains(RegExp(r'partA$'))){
         mergeVideo(videoTitle,".partA");
       }
 
-      //幽默了。。此时取消 文件依旧被占用 但我又不知道什么时候才不会被占用
-
+      //否则正常转变为.PartA
       else{
         File partA = File('${StoragePath.downloadPath}${Platform.pathSeparator}$videoTitle.mp4');
         partA.renameSync('${StoragePath.downloadPath}${Platform.pathSeparator}$videoTitle.partA');
@@ -216,109 +214,110 @@ void videoDownload({required String videoTitle,required String videoUrl,required
 
     });
 
-      playerController.localDownloadTaskQueue.addAll(
-        // recover / new
-        {videoTitle:{"rate":null,"speed":null,"size":videoSize,"cancelToken":currentCancelToken}}
-      );
 
-      try{
+    playerController.localDownloadTaskQueue.addAll(
+      // recover / new
+      {videoTitle:{"rate":null,"speed":null,"size":videoSize,"cancelToken":currentCancelToken}}
+    );
 
-        if(rangeInformation!=null){
-          //不为null 则说明刚刚被暂停 说明当前目录应该留有partA文件
-          currentStoragePath+=".partB";
-        }
+    try{
 
-        else{
-          currentStoragePath+=".mp4";
-        }
+      if(rangeInformation!=null){
+        //不为null 则说明刚刚被暂停 说明当前目录应该留有partA文件
+        currentStoragePath+=".partB";
+      }
 
-        Future.wait(
-          [
-            HttpApiClient.client.download(
-              videoUrl,
-              currentStoragePath,
-              
-              options: 
-                rangeInformation != null ? 
-                Options(headers:{"range":"bytes=$rangeInformation-"}) : 
-                null ,
+      else{
+        currentStoragePath+=".mp4";
+      }
 
-              onReceiveProgress:(count, total) {
+      Future.wait(
+        [
+          HttpApiClient.client.download(
+            videoUrl,
+            currentStoragePath,
+            
+            options: 
+              rangeInformation != null ? 
+              Options(headers:{"range":"bytes=$rangeInformation-"}) : 
+              null ,
 
-                //如果有旧的range信息加入 那么此处的rate信息则不准确 
-                //这会附带影响到Speed属性
+            onReceiveProgress:(count, total) {
 
-                int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
+              //如果有旧的range信息加入 那么此处的rate信息则不准确 
+              //这会附带影响到Speed属性
 
-                if(rangeInformation!=null){
-                  //所以需要range拼接更新
-                  downloadedRange = count+rangeInformation;
-                  newRecordRate = downloadedRange/(videoSize*1024*1024);
-                }
+              int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
-                else{
-                  downloadedRange = count;
-                  newRecordRate = count/total;
-                }
-
-                //隔0.5s update一次
-                if(currentTimeStamp > basicTimer+500){
-
-                  double currentSpeed = (newRecordRate-recordRate)*videoSize; //默认MB级别Label
-
-                  Log.logprint("speed:${currentSpeed*1024}KB/s, rate:$newRecordRate");
-
-                  Map<String,Object?>? currentTask = playerController.localDownloadTaskQueue[videoTitle];
-
-                  if(currentTask!=null){
-
-                    currentTask.update("rate", (value) => newRecordRate);
-                    currentTask.update("speed", (value) => currentSpeed);
-
-                    recordRate = newRecordRate;
-                    basicTimer = currentTimeStamp;
-                    playerControlPanel.updateDownloadList();
-
-                  }
-
-                }
-                
-              },
-              cancelToken: currentCancelToken,
-              deleteOnError: false, //cancelToken也属于 Error的一种。。 嗯。。。
-              //要不干脆使用raf接管?
-            ).then((value){
-              Log.logprint("video complete");
-
-              if(currentStoragePath.contains(RegExp(r'partB$'))){
-                mergeVideo(videoTitle,".mp4");
+              if(rangeInformation!=null){
+                //所以需要range拼接更新
+                downloadedRange = count+rangeInformation;
+                newRecordRate = downloadedRange/(videoSize*1024*1024);
               }
-            }),
 
-            //音频为隐秘下载 如果真出现了视频下完音频没下完 到时候就显示message在上面吧。。
-            //待处理(如果音频没下载完毕的做法[吃力不讨好])
-            currentAudioUrl!=null ?
-            HttpApiClient.client.download(
-              currentAudioUrl,
-              "${StoragePath.downloadPath}${Platform.pathSeparator}$videoTitle.mp3",
-              cancelToken: currentCancelToken,
+              else{
+                downloadedRange = count;
+                newRecordRate = count/total;
+              }
+
+              //隔0.5s update一次
+              if(currentTimeStamp > basicTimer+500){
+
+                double currentSpeed = (newRecordRate-recordRate)*videoSize; //默认MB级别Label
+
+                Log.logprint("speed:${currentSpeed*1024}KB/s, rate:$newRecordRate");
+
+                Map<String,Object?>? currentTask = playerController.localDownloadTaskQueue[videoTitle];
+
+                if(currentTask!=null){
+
+                  currentTask.update("rate", (value) => newRecordRate);
+                  currentTask.update("speed", (value) => currentSpeed);
+
+                  recordRate = newRecordRate;
+                  basicTimer = currentTimeStamp;
+                  playerControlPanel.updateDownloadList();
+
+                }
+
+              }
               
-            ).then((value){Log.logprint("audio complete");}) :
-            Future(() => null)
+            },
+            cancelToken: currentCancelToken,
+            deleteOnError: false, //cancelToken也属于 Error的一种。。 嗯。。。
+            //要不干脆使用raf接管?
+          ).then((value){
+            Log.logprint("video complete");
 
-          ]
-        ).then((value){
-          playerController.localDownloadTaskQueue.update(videoTitle,(value){
-            return {"rate":-1.0,"speed":null,"size":videoSize};
-          });
-          playerControlPanel.updateDownloadList();
+            if(currentStoragePath.contains(RegExp(r'partB$'))){
+              mergeVideo(videoTitle,".mp4");
+            }
+          }),
+
+          //音频为隐秘下载 如果真出现了视频下完音频没下完 到时候就显示message在上面吧。。
+          //待处理(如果音频没下载完毕的做法[吃力不讨好])
+          currentAudioUrl!=null ?
+          HttpApiClient.client.download(
+            currentAudioUrl,
+            "${StoragePath.downloadPath}${Platform.pathSeparator}$videoTitle.mp3",
+            cancelToken: currentCancelToken,
+            
+          ).then((value){Log.logprint("audio complete");}) :
+          Future(() => null)
+
+        ]
+      ).then((value){
+        playerController.localDownloadTaskQueue.update(videoTitle,(value){
+          return {"rate":-1.0,"speed":null,"size":videoSize};
         });
+        playerControlPanel.updateDownloadList();
+      });
 
-      }
+    }
 
-      on DioException catch(error){
-        Log.logprint(error);
-      }
+    on DioException catch(error){
+      Log.logprint(error);
+    }
 
 
 }

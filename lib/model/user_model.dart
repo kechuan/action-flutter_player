@@ -20,7 +20,6 @@ enum VideoQuality{
   UHD         // 4K
 }
 
-
 class UserHive{
 
   static void setUserConfig(String configName,dynamic data) {
@@ -45,8 +44,6 @@ class UserHive{
   }
   
 }
-
-
 
 class UserModel{ 
   //用于记录当前播放器的信息 其包括 setting
@@ -102,14 +99,18 @@ class UserModel{
       UserHive.getUserConfig(requiredConfig[configIndex]).then((configValue){
 
         if(configValue != null && configValue.isNotEmpty){
-          Log.logprint("cookies content:$configValue");
+          Log.logprint("config content:$configValue");
+
           if(requiredConfig[configIndex] == 'cookie'){
             configList.update('cookie', (value) => configValue);
 
             //风险性 但是便利
             ClientCookies.sessData = configValue;
-            Log.logprint("cookies exists.");
+            Log.logprint("cookies exists. start verify");
+
+            verfiyCookie(configValue);
           }
+
         }
 
         else{
@@ -189,6 +190,5 @@ class UserModel{
 
 
   }
-
 
 }

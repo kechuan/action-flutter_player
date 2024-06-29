@@ -65,13 +65,13 @@ jobs:
 
       # 3.4 build apk
       - name: Build Apk
-        run: flutter_distributor package --platform android --targets apk --build-flavor production --build-target-platform android-arm64 --skip-clean --build-dart-define FLUTTER_BUILD_NAME=${{ github.ref_name }}
+        run: flutter_distributor package --platform android --targets apk --build-flavor production --build-target-platform android-arm64 --skip-clean
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD}}
 
       - name: Build Windows
-        run: flutter_distributor package --platform windows --targets zip --skip-clean --build-dart-define FLUTTER_BUILD_NAME=${{ github.ref_name }}
+        run: flutter_distributor package --platform windows --targets zip --skip-clean
 
       - name: pwd
         run: dir
